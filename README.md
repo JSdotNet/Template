@@ -252,15 +252,8 @@ As they are setup in this template they can run in parrallel using multiple dock
 
 ## Resources an inspiration:
 While building this template I was inspired by the following resources:
-- https://www.youtube.com/watch?v=tLk4pZZtiDY&list=PLYpjLpq5ZDGstQ5afRz-34o_0dexr1RGa&index=1&t=219s
-- https://www.youtube.com/watch?v=fe4iuaoxGbA&list=PLYpjLpq5ZDGstQ5afRz-34o_0dexr1RGa&index=32
-- Docker https://www.youtube.com/watch?v=B9ZUJN1Juhk
-- Domain service https://www.youtube.com/watch?v=LbdPuo4zEHE
-- Result object: https://www.youtube.com/watch?v=KgfzM0QWHrQ&list=PLYpjLpq5ZDGstQ5afRz-34o_0dexr1RGa&index=5
-  - https://github.com/YoussefSell/Result.Net
-- Aggregate rules: https://youtu.be/E2ctgrKhqBw
-    - As simple as possible
-    - State changes through the aggregate
-    - Don't nest Aggregates
-- IAsyncEnumerable https://youtu.be/qTetsXmZLk0
-Test Containers: https://dotnet.testcontainers.org/modules/
+- (Clean Architecture With .NET 6 And CQRS - Project Setup)[https://www.youtube.com/watch?v=tLk4pZZtiDY&list=PLYpjLpq5ZDGstQ5afRz-34o_0dexr1RGa&index=1&t=219s]
+- (Clean Architecture Project Setup From Scratch With .NET 7)[https://www.youtube.com/watch?v=fe4iuaoxGbA&list=PLYpjLpq5ZDGstQ5afRz-34o_0dexr1RGa&index=32]
+- (Clean Architecture With .NET 6 And CQRS - Project Setup)[https://www.youtube.com/watch?v=B9ZUJN1Juhk]
+- (Tame Your Domain Using THIS Powerful Tool!)[https://www.youtube.com/watch?v=LbdPuo4zEHE]
+- (Mastering DDD Aggregate Modeling With THESE 3 Steps)[https://youtu.be/E2ctgrKhqBw]
