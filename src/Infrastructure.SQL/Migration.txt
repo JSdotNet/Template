@@ -1,0 +1,2 @@
+﻿add-migration InitialCreate -project Infrastructure.EF -startupproject Infrastructure.EF -context DataContext
+

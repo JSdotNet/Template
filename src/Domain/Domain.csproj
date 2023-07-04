@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <Folder Include="Models\Types\" />
+    <Folder Include="Models\Views\" />
+    <Folder Include="Events\" />
+  </ItemGroup>
+</Project>

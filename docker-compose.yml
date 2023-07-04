@@ -1,0 +1,14 @@
+version: '3.4'
+name: solution-template-ddd
+
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+
+  webapi:
+    image: ${DOCKER_REGISTRY-}webapi
+    build:
+      context: .
+      dockerfile: src/WebApi/Dockerfile
+    depends_on:
+      - mssql
