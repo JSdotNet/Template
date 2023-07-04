@@ -2,12 +2,12 @@
 
 # Introduction
 When I started at my current possition it was mentioned that components are build according to Domain Driven Design.
-While I have worked parts of DDD, like the repository pattern before, I never really worked with DDD as a whole.
+While I have worked with pattern and practices that are also part of DDD, I never really worked with DDD as a whole.
 
 This project is a playground to learn more about DDD and how to implement it in a .NET project. 
 Here I try to find my ideal project setup, including my preferred way of handling cross cutting concerns like logging, validation, etc.
 
-How can I find the right balance between dogmative DDD and pragmatic DDD?
+How can I find the right balance between a dogmative or more pragmatic approach to DDD? (there seem to many contradicting opinions on this topic)
 
 
 
@@ -257,3 +257,4 @@ While building this template I was inspired by the following resources:
 - (Clean Architecture With .NET 6 And CQRS - Project Setup)[https://www.youtube.com/watch?v=B9ZUJN1Juhk]
 - (Tame Your Domain Using THIS Powerful Tool!)[https://www.youtube.com/watch?v=LbdPuo4zEHE]
 - (Mastering DDD Aggregate Modeling With THESE 3 Steps)[https://youtu.be/E2ctgrKhqBw]
+
