@@ -2,6 +2,8 @@
   <ItemGroup>
     <Folder Include="Models\Types\" />
     <Folder Include="Models\Views\" />
-    <Folder Include="Events\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
   </ItemGroup>
 </Project>

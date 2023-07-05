@@ -76,3 +76,13 @@ internal sealed class ExceptionHandlerMiddleware : IMiddleware
         await httpContext.Response.WriteAsync(json);
     }
 }
+
+public static partial class Log
+{
+    [LoggerMessage(0, LogLevel.Error, "Unexpected exception")]
+    public static partial void UnExpectedError(this ILogger logger, Exception exception);
+
+
+    [LoggerMessage(1, LogLevel.Warning, "Functional exception")]
+    public static partial void ApplicationError(this ILogger logger, Exception exception);
+}

@@ -2,6 +2,7 @@
 
 using SolutionTemplate.Domain._;
 using SolutionTemplate.Domain.Errors;
+using SolutionTemplate.Domain.Events;
 
 namespace SolutionTemplate.Domain.Models;
 
@@ -45,6 +46,8 @@ public sealed class Article : AggregateRoot<ArticleId>
 
 
         article._tags.AddRange(tags.Select(x => new Tag(x)));
+
+        article.RaiseDomainEvent(new ArticleCreatedDomainEvent(article.Id));
 
         return article;
     }

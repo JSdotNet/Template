@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SolutionTemplate.Domain;
 using SolutionTemplate.Domain.Repository;
 using SolutionTemplate.Infrastructure.EF.Data;
+using SolutionTemplate.Infrastructure.EF.Interceptors;
 using SolutionTemplate.Infrastructure.EF.Migrator;
 using SolutionTemplate.Infrastructure.EF.Repository;
 
@@ -16,21 +17,27 @@ public static class DependencyInjection
     {
         var assembly = typeof(DependencyInjection).Assembly;
 
-        services.AddDbContext<DataContext>(options =>
+        services.AddSingleton<ConvertDomainEventToOutboxInterceptor>();
+
+        services.AddDbContext<DataContext>((provider, options) =>
         {
+            var interceptor = provider.GetRequiredService<ConvertDomainEventToOutboxInterceptor>();
+
             var connectionString = configuration.GetConnectionString("Database");
-            options.UseSqlServer(connectionString,
-               sqlServerOptionsAction: sqlOptions =>
-               {
-                    sqlOptions.MigrationsAssembly(assembly.GetName().Name);
-                    sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
-               });
+            options.UseSqlServer(connectionString, sqlServerOptionsAction: sqlOptions =>
+                       {
+                            sqlOptions.MigrationsAssembly(assembly.GetName().Name);
+                            sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                       })
+                   .AddInterceptors(interceptor);
         });
 
         services.AddScoped<IReadOnlyDataContext, ReadOnlyDataContext>();
 
         services.AddScoped<IArticleRepository, ArticleRepository>();
         services.AddScoped<IAuthorRepository, AuthorRepository>();
+
+        
 
         services.AddScoped<IUnitOfWork>(provider => provider.GetService<DataContext>()!);
 
