@@ -10,10 +10,7 @@ internal sealed class DataContext : DbContext, IUnitOfWork
     public DbSet<Article> Articles => Set<Article>();
     public DbSet<Author> Authors => Set<Author>();
 
-    public DataContext(DbContextOptions<DataContext> options) : base(options)
-    {
-
-    }
+    public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
