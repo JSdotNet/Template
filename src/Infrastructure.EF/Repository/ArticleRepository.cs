@@ -24,15 +24,6 @@ internal sealed class ArticleRepository : IArticleRepository
         return result;
     }
 
-    public async ValueTask<IReadOnlyList<Article>> GetAllAsync(CancellationToken cancellationToken = default)
-    {
-        var result = await _dataContext.Articles.ToListAsync(cancellationToken);
-
-        return result;
-    }
-
-    public IAsyncEnumerable<Article> AsAsyncEnumerable(CancellationToken cancellationToken = default) => _dataContext.Articles.AsAsyncEnumerable();
-
     public void Add(Article entity)
     {
         _dataContext.Articles.Add(entity);

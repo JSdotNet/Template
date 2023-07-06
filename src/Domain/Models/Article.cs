@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 
 using SolutionTemplate.Domain._;
-using SolutionTemplate.Domain.Errors;
 
 namespace SolutionTemplate.Domain.Models;
 
