@@ -1,6 +1,6 @@
 ﻿using SolutionTemplate.Domain._;
 
-namespace SolutionTemplate.Domain.Errors;
+namespace SolutionTemplate.Domain;
 
 public static class DomainErrors
 {

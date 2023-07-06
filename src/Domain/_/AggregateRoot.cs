@@ -5,6 +5,7 @@ public abstract class AggregateRoot<TAggregateId> : Entity<TAggregateId>, IAggre
 {
     protected AggregateRoot(TAggregateId id) : base(id) { }
 
+
     // The Aggregate is responsible for keeping track of its domain events.
     private readonly List<IDomainEvent> _domainEvents = new();
     public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();

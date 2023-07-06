@@ -1,5 +1,4 @@
 ﻿using SolutionTemplate.Domain._;
-using SolutionTemplate.Domain.Errors;
 using SolutionTemplate.Domain.Models;
 
 using Xunit;

@@ -6,8 +6,6 @@ public interface IRepository<TAggregate, in TId>
 {
     ValueTask<TAggregate?> GetByIdAsync(TId id, CancellationToken cancellationToken = default);
 
-    ValueTask<IReadOnlyList<TAggregate>> GetAllAsync(CancellationToken cancellationToken = default);
-
     void Add(TAggregate entity);
     void Remove(TAggregate entity);
 }

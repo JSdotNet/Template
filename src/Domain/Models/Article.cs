@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 
 using SolutionTemplate.Domain._;
-using SolutionTemplate.Domain.Errors;
 using SolutionTemplate.Domain.Events;
+
 
 namespace SolutionTemplate.Domain.Models;
 
@@ -23,11 +23,9 @@ public sealed class Article : AggregateRoot<ArticleId>
     public DateTime LastUpdated { get; private set; } = DateTime.UtcNow;
 
     
-    
     private readonly List<Tag> _tags = new();
     public IReadOnlyList<Tag> Tags => _tags.AsReadOnly();
 
-    
 
     public static Result<Article> Create(string title, string content, AuthorId author, params string[] tags)
     {
