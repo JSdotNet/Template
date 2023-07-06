@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 
 using SolutionTemplate.Domain._;
-using SolutionTemplate.Domain.Events;
 
 namespace SolutionTemplate.Domain.Models;
 
@@ -27,7 +26,7 @@ public sealed class Author : AggregateRoot<AuthorId>
             Lastname = lastname
         };
 
-        author.RaiseDomainEvent(new AuthorCreatedDomainEvent(author.Id));
+        author.RaiseDomainEvent(new DomainEvents.AuthorCreated(author.Id));
 
         return author;
     }

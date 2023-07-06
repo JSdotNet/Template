@@ -2,18 +2,18 @@
 
 using Microsoft.Extensions.Logging;
 
-using SolutionTemplate.Domain.Events;
+using SolutionTemplate.Domain;
 
 namespace SolutionTemplate.Application.Authors.Events;
 
-internal sealed class AuthorCreatedDomainEventHandler : INotificationHandler<AuthorCreatedDomainEvent>
+internal sealed class AuthorCreatedDomainEventHandler : INotificationHandler<DomainEvents.AuthorCreated>
 {
     private readonly ILogger _logger;
 
     public AuthorCreatedDomainEventHandler(ILogger<AuthorCreatedDomainEventHandler> logger) => _logger = logger;
 
 
-    public Task Handle(AuthorCreatedDomainEvent notification, CancellationToken cancellationToken)
+    public Task Handle(DomainEvents.AuthorCreated notification, CancellationToken cancellationToken)
     {
         // This is only a sample. Normally you would do something useful here, like send an Email or ...
 #pragma warning disable CA1848

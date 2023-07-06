@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics;
 
 using SolutionTemplate.Domain._;
-using SolutionTemplate.Domain.Events;
-
 
 namespace SolutionTemplate.Domain.Models;
 
@@ -45,7 +43,7 @@ public sealed class Article : AggregateRoot<ArticleId>
 
         article._tags.AddRange(tags.Select(x => new Tag(x)));
 
-        article.RaiseDomainEvent(new ArticleCreatedDomainEvent(article.Id));
+        article.RaiseDomainEvent(new DomainEvents.ArticleCreated(article.Id));
 
         return article;
     }
