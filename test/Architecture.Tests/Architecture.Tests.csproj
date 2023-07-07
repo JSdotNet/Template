@@ -5,7 +5,4 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\WebApi\WebApi.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.6.3" />
-  </ItemGroup>
 </Project>

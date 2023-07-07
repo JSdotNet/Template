@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Microsoft.Extensions.Diagnostics.HealthChecks" Version="7.0.8" />
-  </ItemGroup>
-
-  <ItemGroup>
     <InternalsVisibleTo Include="Application.Tests" />
   </ItemGroup>
 
