@@ -24,7 +24,7 @@ internal sealed class ApplicationErrorPipelineBehavior<TRequest, TResponse> : IP
             throw new AlreadyExistsException(response.Error!.Value.Message);
         }
 
-        // Application errors above are mapped specifically by middleware
+        // Application errors above are mapped specifically, so that middleware can return the correct status code
         // Domain errors below are mapped to one response type
         if (response.IsFailure)
         {
