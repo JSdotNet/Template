@@ -4,11 +4,16 @@ namespace SolutionTemplate.Application;
 
 public static class ApplicationErrors
 {
-    internal const string NotFoundCode = "NotFound";
-    internal const string AlreadyExistsCode = "AlreadyExists";
+    public enum Code
+    {
+        NotFound,
+        AlreadyExists
+    }
 
-    
-    public static Error NotFound<T>(Guid id) => new(NotFoundCode, $"{typeof(T).Name} with id {id} not found.");
-    public static Error AlreadyExists<T>(string id) => new(AlreadyExistsCode, $"{typeof(T).Name} with id {id} already exists.");
+    public static Error NotFound<T>(Guid id) => Create(Code.NotFound, $"{typeof(T).Name} with id {id} not found.");
+    public static Error AlreadyExists<T>(string id) => Create(Code.AlreadyExists, $"{typeof(T).Name} with id {id} already exists.");
+
+
+    private static Error Create(Code code, string message) => new(code.ToString(), message);
 }
 

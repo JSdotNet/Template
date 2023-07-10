@@ -61,6 +61,15 @@ internal sealed class ExceptionHandlerMiddleware : IMiddleware
                 problem.Title = "The specified resource already exists.";
                 problem.Detail = exception.Message;
                 break;
+            case DomainException:
+                Log.ApplicationError(_logger, exception);
+
+                httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                problem.Type = nameof(DomainException);
+                problem.Title = "The specified resource already exists.";
+                problem.Detail = exception.Message;
+                break;
+
             default:
                 Log.UnExpectedError(_logger, exception);
 
@@ -75,4 +84,14 @@ internal sealed class ExceptionHandlerMiddleware : IMiddleware
 
         await httpContext.Response.WriteAsync(json);
     }
+}
+
+public static partial class Log
+{
+    [LoggerMessage(0, LogLevel.Error, "Unexpected exception")]
+    public static partial void UnExpectedError(ILogger logger, Exception exception);
+
+
+    [LoggerMessage(1, LogLevel.Warning, "Functional exception")]
+    public static partial void ApplicationError(ILogger logger, Exception exception);
 }
