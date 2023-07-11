@@ -17,7 +17,7 @@ internal sealed class ArticleRepository : IArticleRepository
     }
 
 
-    public async ValueTask<Article?> GetByIdAsync(ArticleId id, CancellationToken cancellationToken = default)
+    public async ValueTask<Article?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var result = await _dataContext.Articles.SingleOrDefaultAsync(i => i.Id == id, cancellationToken);
 

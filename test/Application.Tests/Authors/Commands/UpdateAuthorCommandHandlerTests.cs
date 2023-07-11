@@ -28,7 +28,7 @@ public class UpdateAuthorCommandHandlerTests
         var command = new UpdateAuthor.Command(authorId, firstName, lastName);
         var authorRepositoryMock = new Mock<IAuthorRepository>();
         authorRepositoryMock
-            .Setup(r => r.GetByIdAsync(It.IsAny<AuthorId>(), default))
+            .Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), default))
             .ReturnsAsync(author);
 
         var handler = new UpdateAuthor.Handler(authorRepositoryMock.Object);
@@ -54,7 +54,7 @@ public class UpdateAuthorCommandHandlerTests
         var command = new UpdateAuthor.Command(authorId, firstName, lastName);
         var authorRepositoryMock = new Mock<IAuthorRepository>();
         authorRepositoryMock
-            .Setup(r => r.GetByIdAsync(It.IsAny<AuthorId>(), default))
+            .Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), default))
             .ReturnsAsync((Author?)null);
 
         var handler = new UpdateAuthor.Handler(authorRepositoryMock.Object);

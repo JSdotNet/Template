@@ -1,13 +1,13 @@
-﻿namespace SolutionTemplate.Domain._;
+﻿//namespace SolutionTemplate.Domain._;
 
 
-// https://andrewlock.net/using-strongly-typed-entity-ids-to-avoid-primitive-obsession-part-3/
-public abstract record AggregateRootId
-{
-    public Guid Value { get; }
+//// https://andrewlock.net/using-strongly-typed-entity-ids-to-avoid-primitive-obsession-part-3/
+//public abstract record AggregateRootId
+//{
+//    public Guid Value { get; }
 
-    protected AggregateRootId(Guid value) => Value = value;
+//    protected AggregateRootId(Guid value) => Value = value;
 
 
-    public static implicit operator Guid(AggregateRootId id) => id.Value;
-}
+//    public static implicit operator Guid(AggregateRootId id) => id.Value;
+//}

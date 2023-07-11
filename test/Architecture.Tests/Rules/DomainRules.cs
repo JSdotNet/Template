@@ -100,7 +100,7 @@ public abstract class DomainRules
     internal void DomainEntities_Should_InheritFromEntity()
     {
         // Act
-        var testResult = Types.InAssembly(DomainAssembly).That().ResideInNamespaceContaining("Entities").Should().Inherit(typeof(Entity<>))
+        var testResult = Types.InAssembly(DomainAssembly).That().ResideInNamespaceContaining("Entities").Should().Inherit(typeof(Entity))
             .Or().NotBeClasses() // TODO Check if it is a record?
             .GetResult();
 

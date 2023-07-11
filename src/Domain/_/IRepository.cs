@@ -1,10 +1,9 @@
 ﻿namespace SolutionTemplate.Domain._;
 
-public interface IRepository<TAggregate, in TId> 
-    where TAggregate : IAggregateRoot<TId>
-    where TId : AggregateRootId
+public interface IRepository<TAggregate> 
+    where TAggregate : AggregateRoot
 {
-    ValueTask<TAggregate?> GetByIdAsync(TId id, CancellationToken cancellationToken = default);
+    ValueTask<TAggregate?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
     void Add(TAggregate entity);
     void Remove(TAggregate entity);

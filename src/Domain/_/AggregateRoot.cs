@@ -1,7 +1,6 @@
 ﻿namespace SolutionTemplate.Domain._;
 
-public abstract class AggregateRoot<TAggregateId> : Entity<TAggregateId>, IAggregateRoot<TAggregateId> 
-    where TAggregateId : AggregateRootId
+public abstract class AggregateRoot : Entity
 {
-    protected AggregateRoot(TAggregateId id) : base(id) { }
+    protected AggregateRoot(Guid id) : base(id) { }
 }

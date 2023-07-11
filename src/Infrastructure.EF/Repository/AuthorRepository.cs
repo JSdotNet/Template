@@ -8,7 +8,7 @@ using SolutionTemplate.Infrastructure.EF.Data;
 namespace SolutionTemplate.Infrastructure.EF.Repository;
 
 
-internal sealed class AuthorRepository : RepositoryBase<Author, AuthorId>, IAuthorRepository
+internal sealed class AuthorRepository : RepositoryBase<Author>, IAuthorRepository
 {
     public AuthorRepository(DataContext dataContext) : base(dataContext) {}
     public Task<Author?> FindByEmail(string email)

@@ -32,7 +32,7 @@ public static class UpdateArticle
 
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
-            var article = await _articleRepository.GetByIdAsync(new ArticleId(request.Id), cancellationToken);
+            var article = await _articleRepository.GetByIdAsync(request.Id, cancellationToken);
             if (article is null)
                 return Result.Failure(ApplicationErrors.NotFound<Article>(request.Id));
 

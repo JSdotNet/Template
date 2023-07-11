@@ -5,9 +5,8 @@ using SolutionTemplate.Infrastructure.EF.Data;
 
 namespace SolutionTemplate.Infrastructure.EF._;
 
-internal abstract class RepositoryBase<TAggregate, TAggregateId>
-    where TAggregate : class, IAggregateRoot<TAggregateId>
-    where TAggregateId : AggregateRootId
+internal abstract class RepositoryBase<TAggregate>
+    where TAggregate : AggregateRoot
 {
     protected DataContext DataContext { get; }
     private readonly DbSet<TAggregate> _dbSet;
@@ -20,7 +19,7 @@ internal abstract class RepositoryBase<TAggregate, TAggregateId>
     }
 
 
-    public async ValueTask<TAggregate?> GetByIdAsync(TAggregateId id, CancellationToken cancellationToken = default)
+    public async ValueTask<TAggregate?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var result = await _dbSet.SingleOrDefaultAsync(i => i.Id == id, cancellationToken);
 
