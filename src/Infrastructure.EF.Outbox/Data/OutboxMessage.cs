@@ -1,5 +1,5 @@
 ﻿
-namespace SolutionTemplate.Infrastructure.EF.Outbox;
+namespace SolutionTemplate.Infrastructure.EF.Outbox.Data;
 
 public sealed class OutboxMessage
 {

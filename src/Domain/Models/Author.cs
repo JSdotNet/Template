@@ -24,7 +24,7 @@ public sealed class Author : AggregateRoot
             Lastname = lastname
         };
 
-        author.RaiseDomainEvent(new DomainEvents.AuthorCreated(author.Id));
+        author.DomainEvents.Raise(new DomainEvents.AuthorCreated(author.Id));
 
         return author;
     }

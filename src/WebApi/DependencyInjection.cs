@@ -1,6 +1,5 @@
 ﻿using SolutionTemplate.Application;
 using SolutionTemplate.Infrastructure.EF;
-using SolutionTemplate.Infrastructure.Quartz;
 using SolutionTemplate.Presentation.Api;
 using SolutionTemplate.WebApi.Middleware;
 
@@ -13,7 +12,6 @@ public static class DependencyInjection
         services.AddTransient<ExceptionHandlerMiddleware>();
 
         services.AddInfrastructureEf(configuration)
-                .AddInfrastructureQuartz(configuration) 
                 .AddApplication(configuration)
                 .AddPresentation(configuration);
 

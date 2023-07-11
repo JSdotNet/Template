@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Infrastructure.EF\Infrastructure.EF.csproj" />
-    <ProjectReference Include="..\Infrastructure.Quartz\Infrastructure\Infrastructure.Quartz.csproj" />
+    <ProjectReference Include="..\Infrastructure.Quartz\Infrastructure\Infrastructure.EF.Outbox.csproj" />
     <ProjectReference Include="..\Presentation\Presentation.Api.csproj" />
   </ItemGroup>
 

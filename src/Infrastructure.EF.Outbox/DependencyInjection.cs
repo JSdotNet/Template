@@ -1,19 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Quartz;
 
-using SolutionTemplate.Infrastructure.EF.Data;
-using SolutionTemplate.Infrastructure.Quartz.Background;
+using SolutionTemplate.Infrastructure.EF.Outbox.Background;
+using SolutionTemplate.Infrastructure.EF.Outbox.Interceptors;
 
-namespace SolutionTemplate.Infrastructure.Quartz;
+namespace SolutionTemplate.Infrastructure.EF.Outbox;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructureQuartz(this IServiceCollection services, IConfiguration _)
+    public static IServiceCollection AddInfrastructureEfOutbox(this IServiceCollection services, IConfiguration _)
     {
-        services.AddTransient<DbContext>(provider => provider.GetRequiredService<DataContext>());
+        services.AddSingleton<ConvertDomainEventToOutboxInterceptor>();
 
         services.AddQuartz(configure =>
         {

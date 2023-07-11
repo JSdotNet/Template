@@ -8,9 +8,9 @@ using Newtonsoft.Json;
 using Quartz;
 
 using SolutionTemplate.Domain._;
-using SolutionTemplate.Infrastructure.EF.Outbox;
+using SolutionTemplate.Infrastructure.EF.Outbox.Data;
 
-namespace SolutionTemplate.Infrastructure.Quartz.Background;
+namespace SolutionTemplate.Infrastructure.EF.Outbox.Background;
 
 [DisallowConcurrentExecution]
 internal sealed class OutboxMessageProcessor : IJob

@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using SolutionTemplate.Infrastructure.EF.Outbox;
+using SolutionTemplate.Infrastructure.EF.Outbox.Data;
 
-namespace SolutionTemplate.Infrastructure.EF.Configurations;
+namespace SolutionTemplate.Infrastructure.EF.Outbox.Configurations;
 
 internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<OutboxMessage>
 {

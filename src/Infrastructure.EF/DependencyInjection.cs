@@ -5,8 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using SolutionTemplate.Domain;
 using SolutionTemplate.Domain.Repository;
 using SolutionTemplate.Infrastructure.EF.Data;
-using SolutionTemplate.Infrastructure.EF.Interceptors;
 using SolutionTemplate.Infrastructure.EF.Migrator;
+using SolutionTemplate.Infrastructure.EF.Outbox;
+using SolutionTemplate.Infrastructure.EF.Outbox.Interceptors;
 using SolutionTemplate.Infrastructure.EF.Repository;
 
 namespace SolutionTemplate.Infrastructure.EF;
@@ -17,20 +18,25 @@ public static class DependencyInjection
     {
         var assembly = typeof(DependencyInjection).Assembly;
 
-        services.AddSingleton<ConvertDomainEventToOutboxInterceptor>();
+        // Add the Outbox pattern from the EF.Outbox project
+        services.AddInfrastructureEfOutbox(configuration);
 
         services.AddDbContext<DataContext>((provider, options) =>
         {
-            var interceptor = provider.GetRequiredService<ConvertDomainEventToOutboxInterceptor>();
-
             var connectionString = configuration.GetConnectionString("Database");
             options.UseSqlServer(connectionString, sqlServerOptionsAction: sqlOptions =>
-                       {
-                            sqlOptions.MigrationsAssembly(assembly.GetName().Name);
-                            sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
-                       })
-                   .AddInterceptors(interceptor);
+            {
+                sqlOptions.MigrationsAssembly(assembly.GetName().Name);
+                sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+            });
+
+            // Get the interceptor from the EF.Outbox project and add it to the DataContext
+            options.AddInterceptors(provider.GetRequiredService<ConvertDomainEventToOutboxInterceptor>());
         });
+
+        // The outbox pattern requires the DbContext
+        services.AddTransient<DbContext>(provider => provider.GetRequiredService<DataContext>());
+
 
         services.AddScoped<IReadOnlyDataContext, ReadOnlyDataContext>();
 

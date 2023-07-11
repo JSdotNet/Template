@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace SolutionTemplate.Infrastructure.Quartz;
+namespace SolutionTemplate.Infrastructure.EF.Outbox;
 
 public static class AssemblyReference
 {

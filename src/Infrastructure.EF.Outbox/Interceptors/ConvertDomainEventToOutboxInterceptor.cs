@@ -1,15 +1,14 @@
-﻿
-using Microsoft.EntityFrameworkCore.Diagnostics;
+﻿using Microsoft.EntityFrameworkCore.Diagnostics;
 
 using Newtonsoft.Json;
 
 using SolutionTemplate.Domain._;
-using SolutionTemplate.Infrastructure.EF.Outbox;
+using SolutionTemplate.Infrastructure.EF.Outbox.Data;
 
-namespace SolutionTemplate.Infrastructure.EF.Interceptors;
+namespace SolutionTemplate.Infrastructure.EF.Outbox.Interceptors;
 
 
-internal sealed class ConvertDomainEventToOutboxInterceptor : SaveChangesInterceptor
+public sealed class ConvertDomainEventToOutboxInterceptor : SaveChangesInterceptor
 {
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
     {

@@ -3,9 +3,9 @@ using Microsoft.Extensions.Logging;
 
 using Quartz;
 
-using SolutionTemplate.Infrastructure.EF.Outbox;
+using SolutionTemplate.Infrastructure.EF.Outbox.Data;
 
-namespace SolutionTemplate.Infrastructure.Quartz.Background;
+namespace SolutionTemplate.Infrastructure.EF.Outbox.Background;
 
 [DisallowConcurrentExecution]
 internal sealed class OutboxMessageCleaner : IJob
