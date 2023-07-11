@@ -9,6 +9,9 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
 {
     public void Configure(EntityTypeBuilder<OutboxMessage> builder)
     {
+        builder.ToTable("Outbox");
+
         builder.HasKey(a => a.Id);
+        builder.HasIndex(e => e.OccurredOnUtc);
     }
 }

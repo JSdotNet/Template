@@ -18,7 +18,7 @@ internal sealed class ArticleCreatedDomainEventHandler : INotificationHandler<Do
     {
         // This is only a sample. Normally you would do something useful here, like send an Email or ...
 #pragma warning disable CA1848
-        _logger.LogInformation("Article Created: {ArticleId}", notification.ArticleId.Value);
+        _logger.LogInformation("Article Created: {ArticleId}", notification.ArticleId);
 #pragma warning restore CA1848
 
         return Task.CompletedTask;

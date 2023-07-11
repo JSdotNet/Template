@@ -22,7 +22,8 @@ internal sealed class ConvertDomainEventToOutboxInterceptor : SaveChangesInterce
             .Select(x => x.Entity)
             .SelectMany(aggregateRoot =>
             {
-                var domainEvents = aggregateRoot.DomainEvents;
+                // Calling ToList so that we get a copy of the domain events, otherwise ClearDomainEvents will clear the events gathered here.
+                var domainEvents = aggregateRoot.DomainEvents.ToList();
 
                 aggregateRoot.ClearDomainEvents();
 

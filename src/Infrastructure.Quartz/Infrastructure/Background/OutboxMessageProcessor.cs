@@ -8,19 +8,18 @@ using Newtonsoft.Json;
 using Quartz;
 
 using SolutionTemplate.Domain._;
-using SolutionTemplate.Infrastructure.EF.Data;
 using SolutionTemplate.Infrastructure.EF.Outbox;
 
-namespace SolutionTemplate.Infrastructure.BackgroundJobs;
+namespace SolutionTemplate.Infrastructure.Quartz.Background;
 
 [DisallowConcurrentExecution]
-internal sealed class ProcessOutboxMessageJob : IJob
+internal sealed class OutboxMessageProcessor : IJob
 {
-    private readonly DataContext _dbContext;
+    private readonly DbContext _dbContext;
     private readonly IPublisher _publisher;
     private readonly ILogger _logger;
 
-    public ProcessOutboxMessageJob(DataContext dbContext, IPublisher publisher, ILogger logger)
+    public OutboxMessageProcessor(DbContext dbContext, IPublisher publisher, ILogger logger)
     {
         _dbContext = dbContext;
         _publisher = publisher;
@@ -47,7 +46,7 @@ internal sealed class ProcessOutboxMessageJob : IJob
                     continue;
                 }
 
-                await _publisher.Publish(domainEvent, context.CancellationToken);
+                await HandleEvent(context, domainEvent, message);
 
                 message.ProcessedDateUtc = DateTime.UtcNow;
             }
@@ -59,16 +58,39 @@ internal sealed class ProcessOutboxMessageJob : IJob
             _logger.OutboxJobError(e);
         }
     }
+
+    private async Task HandleEvent(IJobExecutionContext context, IDomainEvent domainEvent, OutboxMessage message)
+    {
+        try
+        {
+            await _publisher.Publish(domainEvent, context.CancellationToken);
+            message.ProcessedDateUtc = DateTime.UtcNow;
+        }
+        catch (Exception e)
+        {
+            // I catch any exception here to prevent other events from not being processed.
+            // If an event has multiple handlers, it is still possible that one of them will fail and the others will succeed.
+            // In that case, the event will be processed again later...
+
+            _logger.OutboxMessageError(e, message.Id);
+
+            message.Error = e.Message;
+        }
+    }
 }
 
 
 
 public static partial class Log
 {
-    [LoggerMessage(2, LogLevel.Critical, "Failed to deserialize outbox message {MessageId}")]
+    [LoggerMessage(0, LogLevel.Critical, "Failed to deserialize Outbox message {MessageId}")]
     public static partial void OutboxMessageDeserializeError(this ILogger logger, Guid messageId);
 
 
-    [LoggerMessage(3, LogLevel.Critical, "Error processing Outbox messages")]
+    [LoggerMessage(1, LogLevel.Critical, "Error processing Outbox messages")]
     public static partial void OutboxJobError(this ILogger logger, Exception exception);
+
+
+    [LoggerMessage(2, LogLevel.Critical, "Error handling Outbox message {messageId}")]
+    public static partial void OutboxMessageError(this ILogger logger, Exception exception, Guid messageId);
 }
