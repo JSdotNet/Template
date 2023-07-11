@@ -41,7 +41,7 @@ public sealed class Article : AggregateRoot
 
         article._tags.AddRange(tags.Select(x => new Tag(x)));
 
-        article.RaiseDomainEvent(new DomainEvents.ArticleCreated(article.Id));
+        article.DomainEvents.Raise(new DomainEvents.ArticleCreated(article.Id));
 
         return article;
     }

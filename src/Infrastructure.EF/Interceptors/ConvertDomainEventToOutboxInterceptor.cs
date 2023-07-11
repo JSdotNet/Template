@@ -18,14 +18,14 @@ internal sealed class ConvertDomainEventToOutboxInterceptor : SaveChangesInterce
             return base.SavingChangesAsync(eventData, result, cancellationToken);
 
 
-        var events = dbContext.ChangeTracker.Entries<AggregateRoot>()
+        var events = dbContext.ChangeTracker.Entries<IHasDomainEvents>()
             .Select(x => x.Entity)
-            .SelectMany(aggregateRoot =>
+            .SelectMany(entityWithDomainEvents =>
             {
                 // Calling ToList so that we get a copy of the domain events, otherwise ClearDomainEvents will clear the events gathered here.
-                var domainEvents = aggregateRoot.DomainEvents.ToList();
+                var domainEvents = entityWithDomainEvents.DomainEvents.Items.ToList();
 
-                aggregateRoot.ClearDomainEvents();
+                entityWithDomainEvents.DomainEvents.Clear();
 
                 return domainEvents;
             })
