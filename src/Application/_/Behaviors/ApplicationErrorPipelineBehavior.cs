@@ -12,16 +12,18 @@ internal sealed class ApplicationErrorPipelineBehavior<TRequest, TResponse> : IP
     {
         var response = await next();
 
-        if (response.IsFailure && response.Error == ApplicationErrors.NotFoundCode)
+        if (response.IsFailure && Enum.TryParse<ApplicationErrors.Code>(response.Error!.Value.Code, out var code))
         {
             // Middleware should catch these exceptions and return a 404
-            throw new NotFoundException(response.Error!.Value.Message);
+            throw new ApplicationException(code, response.Error!.Value.Message);
         }
-
-        if (response.IsFailure && response.Error == ApplicationErrors.AlreadyExistsCode)
+        
+        // Application errors above are mapped specifically, so that middleware can return the correct status code
+        // Domain errors below are mapped to one response type
+        if (response.IsFailure)
         {
-            // Middleware should catch these exceptions and return a 409
-            throw new AlreadyExistsException(response.Error!.Value.Message);
+            // Middleware should catch these exceptions and return a 400
+            throw new DomainException(response.Error!.Value);
         }
 
         return response;
@@ -29,16 +31,23 @@ internal sealed class ApplicationErrorPipelineBehavior<TRequest, TResponse> : IP
 
 }
 
-public class NotFoundException : Exception
+public class ApplicationException : Exception
 {
-    public NotFoundException(string message) : base(message)
+    public ApplicationErrors.Code Code { get; }
+
+    public ApplicationException(ApplicationErrors.Code code, string message) : base(message)
     {
+        Code = code;
     }
 }
 
-public class AlreadyExistsException : Exception
+
+public class DomainException : Exception
 {
-    public AlreadyExistsException(string message) : base(message)
+    public string Code { get; }
+
+    public DomainException(Error error) : base(error.Message)
     {
+        Code = error.Code;
     }
 }

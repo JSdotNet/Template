@@ -19,9 +19,8 @@ public class DeleteAuthorCommandHandlerTests
         var authorRepositoryMock = new Mock<IAuthorRepository>();
         var command = new DeleteAuthor.Command(Guid.NewGuid());
         var handler = new DeleteAuthor.Handler(authorRepositoryMock.Object);
-        var authorId = new AuthorId(command.Id);
 
-        authorRepositoryMock.Setup(r => r.GetByIdAsync(authorId, default))
+        authorRepositoryMock.Setup(r => r.GetByIdAsync(command.Id, default))
             .ReturnsAsync(Author.Create("Email", "Firstname", "Lastname"));
 
         // Act
@@ -40,10 +39,9 @@ public class DeleteAuthorCommandHandlerTests
         var authorRepositoryMock = new Mock<IAuthorRepository>();
         var command = new DeleteAuthor.Command(Guid.NewGuid());
         var handler = new DeleteAuthor.Handler(authorRepositoryMock.Object);
-        var authorId = new AuthorId(command.Id);
 
-        
-        authorRepositoryMock.Setup(r => r.GetByIdAsync(authorId, default))
+
+        authorRepositoryMock.Setup(r => r.GetByIdAsync(command.Id, default))
             .ReturnsAsync((Author?)null);
 
         // Act

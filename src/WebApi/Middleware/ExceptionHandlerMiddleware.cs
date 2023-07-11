@@ -1,12 +1,16 @@
 ﻿using System.Net;
 
 using FluentValidation;
+using FluentValidation.Results;
 
 using Microsoft.AspNetCore.Mvc;
 
 using Newtonsoft.Json;
 
+using SolutionTemplate.Application;
 using SolutionTemplate.Application._.Behaviors;
+
+using ApplicationException = SolutionTemplate.Application._.Behaviors.ApplicationException;
 
 namespace SolutionTemplate.WebApi.Middleware;
 
@@ -40,29 +44,30 @@ internal sealed class ExceptionHandlerMiddleware : IMiddleware
         ProblemDetails problem = new();
         switch (exception)
         {
-            case ValidationException:
-                Log.ApplicationError(_logger, exception);
+            case ValidationException validationException:
+                _logger.ValidationError(validationException.Errors, exception);
 
                 httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 problem.Title = "One or more validation errors occurred.";
                 problem.Detail = exception.Message;
                 break;
-            case NotFoundException:
-                Log.ApplicationError(_logger, exception);
+            case ApplicationException applicationException:
+                _logger.ApplicationError(applicationException.Code.ToString(), exception);
 
-                httpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                problem.Title = "The specified resource was not found.";
-                problem.Detail = exception.Message;
+                httpContext.Response.StatusCode = MapErrorToStatusCode(applicationException.Code);
+                problem.Type = nameof(ApplicationException);
+                problem.Title = exception.Message;
                 break;
-            case AlreadyExistsException:
-                Log.ApplicationError(_logger, exception);
+            case DomainException domainException:
+                _logger.DomainError(domainException.Code, exception);
 
-                httpContext.Response.StatusCode = (int)HttpStatusCode.Conflict;
-                problem.Title = "The specified resource already exists.";
-                problem.Detail = exception.Message;
+                httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                problem.Type = nameof(DomainException);
+                problem.Title = exception.Message;
                 break;
+
             default:
-                Log.UnExpectedError(_logger, exception);
+                _logger.UnExpectedError(exception);
 
                 httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 problem.Title = "An unhandled error occurred.";
@@ -75,6 +80,15 @@ internal sealed class ExceptionHandlerMiddleware : IMiddleware
 
         await httpContext.Response.WriteAsync(json);
     }
+    private static int MapErrorToStatusCode(ApplicationErrors.Code code)
+    {
+        return code switch
+        {
+            ApplicationErrors.Code.NotFound => (int)HttpStatusCode.NotFound,
+            ApplicationErrors.Code.AlreadyExists => (int)HttpStatusCode.Conflict,
+            _ => throw new NotSupportedException($"Code {code} is not supported.")
+        };
+    }
 }
 
 public static partial class Log
@@ -83,6 +97,14 @@ public static partial class Log
     public static partial void UnExpectedError(this ILogger logger, Exception exception);
 
 
-    [LoggerMessage(1, LogLevel.Warning, "Functional exception")]
-    public static partial void ApplicationError(this ILogger logger, Exception exception);
+    [LoggerMessage(1, LogLevel.Error, "Validation errors: {errors}")]
+    public static partial void ValidationError(this ILogger logger, IEnumerable<ValidationFailure> errors, Exception exception);
+
+
+    [LoggerMessage(2, LogLevel.Warning, "Application error: {code}")]
+    public static partial void ApplicationError(this ILogger logger, string code, Exception exception);
+
+
+    [LoggerMessage(3, LogLevel.Warning, "Domain error: {code}")]
+    public static partial void DomainError(this ILogger logger, string code, Exception exception);
 }

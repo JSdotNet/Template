@@ -4,13 +4,11 @@ using SolutionTemplate.Domain._;
 
 namespace SolutionTemplate.Domain.Models;
 
-public sealed record AuthorId(Guid Value) : AggregateRootId(Value);
-
 [DebuggerDisplay("{Id}: {Firstname} {Lastname}")]
-public sealed class Author : AggregateRoot<AuthorId>
+public sealed class Author : AggregateRoot
 {
     private Author() : base(default!) { }
-    private Author(AuthorId id) : base(id) { }
+    private Author(Guid id) : base(id) { }
 
     public required string Email { get; init; }
     public string Firstname { get; private set; } = default!;
@@ -19,7 +17,7 @@ public sealed class Author : AggregateRoot<AuthorId>
 
     public static Result<Author> Create(string email, string firstname, string lastname)
     {
-        var author = new Author(new AuthorId(Guid.NewGuid()))
+        var author = new Author(Guid.NewGuid())
         {
             Email = email,
             Firstname = firstname,

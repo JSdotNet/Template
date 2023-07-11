@@ -32,7 +32,7 @@ public static class UpdateAuthor
 
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
-            var author = await _authorRepository.GetByIdAsync(new AuthorId(request.Id), cancellationToken);
+            var author = await _authorRepository.GetByIdAsync(request.Id, cancellationToken);
             if (author is null)
                 return Result.Failure(ApplicationErrors.NotFound<Author>(request.Id));
 

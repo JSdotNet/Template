@@ -4,17 +4,15 @@ using SolutionTemplate.Domain._;
 
 namespace SolutionTemplate.Domain.Models;
 
-public sealed record ArticleId(Guid Value) : AggregateRootId(Value);
-
 [DebuggerDisplay("{Id}: {Title}")]
-public sealed class Article : AggregateRoot<ArticleId>
+public sealed class Article : AggregateRoot
 {
     private Article() : base(default!) { }
 
-    private Article(ArticleId id) : base(id) { }
+    private Article(Guid id) : base(id) { }
 
     public DateTime CreatedAt { get; private init; } = DateTime.UtcNow;
-    public AuthorId AuthorId { get; private init; } = default!;
+    public Guid AuthorId { get; private init; } = default!;
 
     public string Title { get; private set; } = default!;
     public string Content { get; private set; } = default!;
@@ -25,7 +23,7 @@ public sealed class Article : AggregateRoot<ArticleId>
     public IReadOnlyList<Tag> Tags => _tags.AsReadOnly();
 
 
-    public static Result<Article> Create(string title, string content, AuthorId author, params string[] tags)
+    public static Result<Article> Create(string title, string content, Guid author, params string[] tags)
     {
         if (tags.Length < 3)
             return Result.Failure<Article>(DomainErrors.Article.AtLeast3Tags);
@@ -33,7 +31,7 @@ public sealed class Article : AggregateRoot<ArticleId>
         if (tags.Length > 10)
             return Result.Failure<Article>(DomainErrors.Article.NoMoreThen10Tags);
 
-        var article = new Article(new ArticleId(Guid.NewGuid()))
+        var article = new Article(Guid.NewGuid())
         {
             AuthorId = author,
             Title = title,

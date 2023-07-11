@@ -20,8 +20,8 @@ public class DeleteArticleCommandHandlerTests
         var command = new DeleteArticle.Command(Guid.NewGuid());
         var handler = new DeleteArticle.Handler(articleRepositoryMock.Object);
 
-        articleRepositoryMock.Setup(r => r.GetByIdAsync(new ArticleId(command.Id), default))
-            .ReturnsAsync(Article.Create("Test", "Test Content", new AuthorId(Guid.NewGuid()), "1", "2", "3").Value);
+        articleRepositoryMock.Setup(r => r.GetByIdAsync(command.Id, default))
+            .ReturnsAsync(Article.Create("Test", "Test Content", Guid.NewGuid(), "1", "2", "3").Value);
 
         // Act
         var result = await handler.Handle(command, default);
@@ -39,9 +39,8 @@ public class DeleteArticleCommandHandlerTests
         var articleRepositoryMock = new Mock<IArticleRepository>();
         var command = new DeleteArticle.Command(Guid.NewGuid());
         var handler = new DeleteArticle.Handler(articleRepositoryMock.Object);
-        var articleId = new ArticleId(command.Id);
 
-        articleRepositoryMock.Setup(r => r.GetByIdAsync(articleId, default))
+        articleRepositoryMock.Setup(r => r.GetByIdAsync(command.Id, default))
             .ReturnsAsync((Article?)null);
 
         // Act

@@ -29,7 +29,7 @@ public static class DeleteAuthor
         }
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
-            var article = await _authorRepository.GetByIdAsync(new AuthorId(request.Id), cancellationToken);
+            var article = await _authorRepository.GetByIdAsync(request.Id, cancellationToken);
             if (article is null)
                 return Result.Failure(ApplicationErrors.NotFound<Author>(request.Id)); // TODO Use AuthorId here
 

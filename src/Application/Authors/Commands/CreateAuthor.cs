@@ -43,7 +43,7 @@ public static class CreateAuthor
 
             _authorRepository.Add(result);
 
-            return result.Value.Id.Value; // TODO I do not like the .Value.Id.Value here...
+            return result.Value.Id; // TODO I do not like the .Value.Id here...
         }
     }
 }

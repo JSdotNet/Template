@@ -20,7 +20,7 @@ public class UpdateArticleCommandHandlerTests
     public async Task Handle_Should_UpdateAuthor()
     {
         // Arrange
-        var authorId = new AuthorId(Guid.NewGuid());
+        var authorId = Guid.NewGuid();
         var articleId = Guid.NewGuid();
         var title = _fixture.Create<string>();
         var content = _fixture.Create<string>();
@@ -29,7 +29,7 @@ public class UpdateArticleCommandHandlerTests
         var command = new UpdateArticle.Command(articleId, title, content);
         var articleRepositoryMock = new Mock<IArticleRepository>();
         articleRepositoryMock
-            .Setup(r => r.GetByIdAsync(It.IsAny<ArticleId>(), default))
+            .Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), default))
             .ReturnsAsync(article);
 
         var handler = new UpdateArticle.Handler(articleRepositoryMock.Object);
@@ -55,7 +55,7 @@ public class UpdateArticleCommandHandlerTests
         var command = new UpdateArticle.Command(authorId, firstName, lastName);
         var articleRepositoryMock = new Mock<IArticleRepository>();
         articleRepositoryMock
-            .Setup(r => r.GetByIdAsync(It.IsAny<ArticleId>(), default))
+            .Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), default))
             .ReturnsAsync((Article?)null);
 
         var handler = new UpdateArticle.Handler(articleRepositoryMock.Object);

@@ -18,7 +18,7 @@ internal sealed class ConvertDomainEventToOutboxInterceptor : SaveChangesInterce
             return base.SavingChangesAsync(eventData, result, cancellationToken);
 
 
-        var events = dbContext.ChangeTracker.Entries<AggregateRoot<AggregateRootId>>()
+        var events = dbContext.ChangeTracker.Entries<AggregateRoot>()
             .Select(x => x.Entity)
             .SelectMany(aggregateRoot =>
             {

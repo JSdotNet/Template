@@ -53,7 +53,7 @@ public sealed class ArticleIntegrationTests : IAsyncLifetime
     public async Task GetArticle()
     {
         // Act
-        var response = await _client.GetAsync($"/article/{TestData.ArticleSolutionTemplate.Id.Value}");
+        var response = await _client.GetAsync($"/article/{TestData.ArticleSolutionTemplate.Id}");
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -67,7 +67,7 @@ public sealed class ArticleIntegrationTests : IAsyncLifetime
     public async Task UpdateArticle()
     {
         // Arrange
-        var json = JsonConvert.SerializeObject(new UpdateArticle.Command(TestData.ArticleSolutionTemplate.Id.Value, "New Title", "New Content"));
+        var json = JsonConvert.SerializeObject(new UpdateArticle.Command(TestData.ArticleSolutionTemplate.Id, "New Title", "New Content"));
         var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
         // Act
@@ -97,7 +97,7 @@ public sealed class ArticleIntegrationTests : IAsyncLifetime
     public async Task DeleteArticle()
     {
         // Act
-        var response = await _client.DeleteAsync($"/article/{TestData.ArticleSolutionTemplate.Id.Value}");
+        var response = await _client.DeleteAsync($"/article/{TestData.ArticleSolutionTemplate.Id}");
 
         // Assert
         response.EnsureSuccessStatusCode();

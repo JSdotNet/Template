@@ -17,7 +17,7 @@ public class ArticleTests
         var authorId = Guid.NewGuid();
 
         // Act
-        var result = Article.Create(title, content, new AuthorId(authorId), tags);
+        var result = Article.Create(title, content, authorId, tags);
 
         // Assert
         Assert.IsType<Result<Article>>(result);
@@ -30,7 +30,7 @@ public class ArticleTests
 
         Assert.Equal(title, article.Title);
         Assert.Equal(content, article.Content);
-        Assert.Equal(authorId, article.AuthorId.Value);
+        Assert.Equal(authorId, article.AuthorId);
 
         Assert.Equal(tags.Length, article.Tags.Count);
     }
@@ -45,7 +45,7 @@ public class ArticleTests
         var tags = new [] { "test", "tags" };
 
         // Act
-        var result = Article.Create(title, content, new AuthorId(Guid.NewGuid()), tags);
+        var result = Article.Create(title, content, Guid.NewGuid(), tags);
 
         // Assert
         Assert.IsType<Result<Article>>(result);
@@ -62,7 +62,7 @@ public class ArticleTests
         var tags = new [] { "test", "tags", "example", "sample", "unit", "mock", "research", "data", "analysis", "statistics", "extra" };
 
         // Act
-        var result = Article.Create(title, content, new AuthorId(Guid.NewGuid()), tags);
+        var result = Article.Create(title, content, Guid.NewGuid(), tags);
 
         // Assert
         Assert.IsType<Result<Article>>(result);
@@ -74,7 +74,7 @@ public class ArticleTests
     public void AddTag_Should_Add_Tag_To_An_Article_When_Valid()
     {
         // Arrange
-        var article = Article.Create("Test Title", "Test Content", new AuthorId(Guid.Empty), "test", "tags", "example").Value;
+        var article = Article.Create("Test Title", "Test Content", Guid.Empty, "test", "tags", "example").Value;
         var tagName = "test";
 
         // Act

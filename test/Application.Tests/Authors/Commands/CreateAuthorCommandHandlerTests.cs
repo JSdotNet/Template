@@ -39,7 +39,7 @@ public class CreateAuthorCommandHandlerTests
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeEmpty();
         authorRepositoryMock.Verify(m =>
-            m.Add(It.Is<Author>(a => a.Id.Value == result.Value &&
+            m.Add(It.Is<Author>(a => a.Id == result.Value &&
                                                        a.Email == email &&
                                                        a.Firstname == firstname &&
                                                        a.Lastname == lastname)), Times.Once);

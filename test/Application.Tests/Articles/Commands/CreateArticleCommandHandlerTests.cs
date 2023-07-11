@@ -46,7 +46,7 @@ public class CreateArticleCommandHandlerTests
 
 
         articleRepositoryMock.Verify(m =>
-            m.Add(It.Is<Article>(a => a.Id.Value == result.Value.Id &&
+            m.Add(It.Is<Article>(a => a.Id == result.Value.Id &&
                                                          a.Title == title &&
                                                          a.Content == content)), Times.Once);
 
@@ -88,7 +88,7 @@ public class CreateArticleCommandHandlerTests
 
 
         articleRepositoryMock.Verify(m =>
-            m.Add(It.Is<Article>(a => a.Id.Value == result.Value.Id &&
+            m.Add(It.Is<Article>(a => a.Id == result.Value.Id &&
                                       a.Title == title &&
                                       a.Content == content)), Times.Once);
 
