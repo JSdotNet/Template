@@ -15,13 +15,6 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration _)
     {
-        // TODO Use Scrutor ???
-        //services.Scan(scan => scan
-        //    .FromAssemblies(AssemblyReference.Assembly)
-        //    .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<,>)))
-        //    .AsImplementedInterfaces()
-        //    .WithTransientLifetime());
-
         services.AddMediatR(configuration =>
         {
             configuration.RegisterServicesFromAssembly(AssemblyReference.Assembly);

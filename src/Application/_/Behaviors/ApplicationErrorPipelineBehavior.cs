@@ -31,7 +31,7 @@ internal sealed class ApplicationErrorPipelineBehavior<TRequest, TResponse> : IP
 
 }
 
-public class ApplicationException : Exception
+public sealed class ApplicationException : Exception
 {
     public ApplicationErrors.Code Code { get; }
 
@@ -42,7 +42,7 @@ public class ApplicationException : Exception
 }
 
 
-public class DomainException : Exception
+public sealed class DomainException : Exception
 {
     public string Code { get; }
 

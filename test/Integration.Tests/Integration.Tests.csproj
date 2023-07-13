@@ -3,8 +3,8 @@
     <UserSecretsId>bbdcf615-b98a-46bc-aa93-3da661e82085</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.8" />
-    <PackageReference Include="Respawn" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.9" />
+    <PackageReference Include="Respawn" Version="6.1.0" />
     <PackageReference Include="Testcontainers" Version="3.3.0" />
     <PackageReference Include="Testcontainers.MsSql" Version="3.3.0" />
   </ItemGroup>

@@ -1,28 +1,29 @@
 ﻿using MediatR;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json;
 
+using Polly;
+
 using Quartz;
 
 using SolutionTemplate.Domain._;
-using SolutionTemplate.Infrastructure.EF.Outbox.Data;
+using SolutionTemplate.Infrastructure.EF.Outbox.Entities;
 
 namespace SolutionTemplate.Infrastructure.EF.Outbox.Background;
 
 [DisallowConcurrentExecution]
 internal sealed class OutboxMessageProcessor : IJob
 {
-    private readonly DbContext _dbContext;
-    private readonly IPublisher _publisher;
+    private readonly IServiceProvider _serviceProvider;
     private readonly ILogger _logger;
 
-    public OutboxMessageProcessor(DbContext dbContext, IPublisher publisher, ILogger logger)
+    public OutboxMessageProcessor(IServiceProvider serviceProvider, ILogger<OutboxMessageProcessor> logger)
     {
-        _dbContext = dbContext;
-        _publisher = publisher;
+        _serviceProvider = serviceProvider;
         _logger = logger;
     }
 
@@ -30,11 +31,22 @@ internal sealed class OutboxMessageProcessor : IJob
     {
         try
         {
-            var messages = await _dbContext.Set<OutboxMessage>()
+            using var scope = _serviceProvider.CreateScope();
+
+            var dbContext = scope.ServiceProvider.GetRequiredService<DbContext>();
+            var publisher = scope.ServiceProvider.GetRequiredService<IPublisher>();
+
+            
+            var messages = await dbContext.Set<OutboxMessage>()
                 .Where(m => m.ProcessedDateUtc == null)
                 .OrderBy(m => m.OccurredOnUtc)
                 .Take(20)
                 .ToListAsync(context.CancellationToken);
+
+            if (!messages.Any())
+            {
+                return;
+            }
 
             foreach (var message in messages)
             {
@@ -46,35 +58,26 @@ internal sealed class OutboxMessageProcessor : IJob
                     continue;
                 }
 
-                await HandleEvent(context, domainEvent, message);
+                var retryPolicy = Policy.Handle<Exception>()
+                    .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
 
+                var policyResult = await retryPolicy.ExecuteAndCaptureAsync(async () =>
+                {
+                    await publisher.Publish(domainEvent, context.CancellationToken);
+                });
+
+                message.Error = policyResult.FinalException?.Message;
                 message.ProcessedDateUtc = DateTime.UtcNow;
             }
 
-            await _dbContext.SaveChangesAsync(context.CancellationToken);
+            await dbContext.SaveChangesAsync(context.CancellationToken);
         }
         catch (Exception e)
         {
             _logger.OutboxJobError(e);
-        }
-    }
 
-    private async Task HandleEvent(IJobExecutionContext context, IDomainEvent domainEvent, OutboxMessage message)
-    {
-        try
-        {
-            await _publisher.Publish(domainEvent, context.CancellationToken);
-            message.ProcessedDateUtc = DateTime.UtcNow;
-        }
-        catch (Exception e)
-        {
-            // I catch any exception here to prevent other events from not being processed.
-            // If an event has multiple handlers, it is still possible that one of them will fail and the others will succeed.
-            // In that case, the event will be processed again later...
-
-            _logger.OutboxMessageError(e, message.Id);
-
-            message.Error = e.Message;
+            // When saving the message processing status fails, the record will be picked up in the next iteration.
+            // If some handlers already processed the message, they will be skipped based on the OutboxMessageConsumer registration.
         }
     }
 }

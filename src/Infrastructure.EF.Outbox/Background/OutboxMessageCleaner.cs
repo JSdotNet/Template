@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 using Quartz;
 
-using SolutionTemplate.Infrastructure.EF.Outbox.Data;
+using SolutionTemplate.Infrastructure.EF.Outbox.Entities;
 
 namespace SolutionTemplate.Infrastructure.EF.Outbox.Background;
 

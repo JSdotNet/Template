@@ -25,7 +25,7 @@ builder.Host.UseSerilog((context, configuration) =>
 // Setup controllers in the presentation project
 builder.Services
     .AddControllers()
-    .AddApplicationPart(SolutionTemplate.Presentation.Api.AssemblyReference.Assembly);
+    .AddApplicationPart(AssemblyReference.Assembly);
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

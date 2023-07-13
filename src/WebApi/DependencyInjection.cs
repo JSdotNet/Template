@@ -11,8 +11,8 @@ public static class DependencyInjection
     {
         services.AddTransient<ExceptionHandlerMiddleware>();
 
-        services.AddInfrastructureEf(configuration)
-                .AddApplication(configuration)
+        services.AddApplication(configuration)
+                .AddInfrastructureEf(configuration)
                 .AddPresentation(configuration);
 
         return services;

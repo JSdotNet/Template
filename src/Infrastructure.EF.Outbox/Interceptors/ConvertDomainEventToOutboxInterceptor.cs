@@ -3,7 +3,7 @@
 using Newtonsoft.Json;
 
 using SolutionTemplate.Domain._;
-using SolutionTemplate.Infrastructure.EF.Outbox.Data;
+using SolutionTemplate.Infrastructure.EF.Outbox.Entities;
 
 namespace SolutionTemplate.Infrastructure.EF.Outbox.Interceptors;
 
@@ -30,7 +30,7 @@ public sealed class ConvertDomainEventToOutboxInterceptor : SaveChangesIntercept
             })
             .Select(domainEvent => new OutboxMessage
             {
-                Id = Guid.NewGuid(),
+                Id = domainEvent.Id,
                 OccurredOnUtc = DateTime.UtcNow,
                 Type = domainEvent.GetType().FullName!,
                 Content = JsonConvert.SerializeObject(domainEvent, new JsonSerializerSettings

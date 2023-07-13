@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 using SolutionTemplate.Domain;
 using SolutionTemplate.Domain.Models;
@@ -12,11 +13,20 @@ public sealed class DataContext : DbContext, IUnitOfWork
 
     public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+
+        optionsBuilder.EnableSensitiveDataLogging();
+        optionsBuilder.EnableDetailedErrors();
+        optionsBuilder.LogTo(Console.WriteLine, minimumLevel: LogLevel.Information);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(DataContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(AssemblyReference.Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(Outbox.AssemblyReference.Assembly);
     }
 }

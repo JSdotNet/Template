@@ -1,13 +1,12 @@
-﻿using MediatR;
+﻿using Microsoft.Extensions.Logging;
 
-using Microsoft.Extensions.Logging;
-
+using SolutionTemplate.Application._.Messaging;
 using SolutionTemplate.Domain;
 
 
 namespace SolutionTemplate.Application.Articles.Events;
 
-internal sealed class ArticleCreatedDomainEventHandler : INotificationHandler<DomainEvents.ArticleCreated>
+internal sealed class ArticleCreatedDomainEventHandler : IDomainEventNotificationHandler<DomainEvents.ArticleCreated>
 {
     private readonly ILogger _logger;
 
