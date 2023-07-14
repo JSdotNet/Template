@@ -8,14 +8,17 @@ using Quartz;
 using SolutionTemplate.Infrastructure.EF.Outbox.Background;
 using SolutionTemplate.Infrastructure.EF.Outbox.Handler;
 using SolutionTemplate.Infrastructure.EF.Outbox.Interceptors;
+using SolutionTemplate.Infrastructure.EF.Outbox.Options;
 
 namespace SolutionTemplate.Infrastructure.EF.Outbox;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructureEfOutbox(this IServiceCollection services, IConfiguration _)
+    public static IServiceCollection AddInfrastructureEfOutbox(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<ConvertDomainEventToOutboxInterceptor>();
+
+        var outboxOptions = configuration.GetSection(nameof(OutboxOptions)).Get<OutboxOptions>();
 
         services.AddQuartz(configure =>
         {
@@ -23,26 +26,21 @@ public static class DependencyInjection
 
             configure.AddJob<OutboxMessageProcessor>(outboxMessageProcessorJobKey);
             configure.AddTrigger(trigger => trigger.ForJob(outboxMessageProcessorJobKey)
-                .WithSimpleSchedule(schedule => schedule.WithIntervalInSeconds(10).RepeatForever())); // TODO Make configurable
+                .WithSimpleSchedule(schedule => schedule.WithIntervalInSeconds(outboxOptions?.MessageProcessorIntervalInSeconds ?? 10).RepeatForever()));
 
 
             var outboxMessageCleanerJobKey = new JobKey(nameof(OutboxMessageCleaner));
 
             configure.AddJob<OutboxMessageCleaner>(outboxMessageCleanerJobKey);
             configure.AddTrigger(trigger => trigger.ForJob(outboxMessageCleanerJobKey)
-                .WithSimpleSchedule(schedule => schedule.WithIntervalInSeconds(10).RepeatForever())); // TODO Make configurable
+                .WithSimpleSchedule(schedule => schedule.WithIntervalInHours(outboxOptions?.MessageCleanupIntervalDays ?? 28).RepeatForever()));
 
             configure.UseMicrosoftDependencyInjectionJobFactory();
         });
 
         services.AddQuartzHostedService();
-
-        // TODO IS this needed?
-        //services.Scan(selector => selector.FromAssemblies(AssemblyReference.Assembly)
-        //    .AddClasses(true)
-        //    .AsImplementedInterfaces()
-        //    .WithScopedLifetime());
-
+        
+        // TODO Dependency MediatR
         services.Decorate(typeof(INotificationHandler<>), typeof(IdempotentDomainEventNotificationHandler<>));
 
         return services;

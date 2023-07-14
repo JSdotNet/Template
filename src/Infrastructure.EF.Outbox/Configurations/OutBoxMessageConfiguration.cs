@@ -14,6 +14,10 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
         builder.HasKey(a => a.Id);
         builder.HasIndex(e => e.OccurredOnUtc);
 
+        builder.Property(e => e.Type).IsRequired().HasMaxLength(200);
+        builder.Property(e => e.Content).IsRequired().HasMaxLength(2000);
+        builder.Property(e => e.Error).IsRequired().HasMaxLength(200);
+
         builder.HasMany<OutboxMessageConsumer>()
             .WithOne()
             .HasForeignKey(c => c.Id)

@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 using Quartz;
 
 using SolutionTemplate.Infrastructure.EF.Outbox.Entities;
+using SolutionTemplate.Infrastructure.EF.Outbox.Options;
 
 namespace SolutionTemplate.Infrastructure.EF.Outbox.Background;
 
@@ -12,11 +14,13 @@ internal sealed class OutboxMessageCleaner : IJob
 {
     private readonly DbContext _dbContext;
     private readonly ILogger _logger;
+    private readonly IOptions<OutboxOptions> _options;
 
-    public OutboxMessageCleaner(DbContext dbContext, ILogger<OutboxMessageCleaner> logger)
+    public OutboxMessageCleaner(DbContext dbContext, ILogger<OutboxMessageCleaner> logger, IOptions<OutboxOptions> options)
     {
         _dbContext = dbContext;
         _logger = logger;
+        _options = options;
     }
 
     public async Task Execute(IJobExecutionContext context)
@@ -25,12 +29,14 @@ internal sealed class OutboxMessageCleaner : IJob
         {
             await _dbContext.Set<OutboxMessage>()
                 .Where(m => m.ProcessedDateUtc != null &&
-                            m.ProcessedDateUtc < DateTime.UtcNow.AddDays(-10)) // TODO Make period configurable and simulate test case
+                            m.ProcessedDateUtc < DateTime.UtcNow.AddDays(-_options.Value.MessageRetentionInDays))
                 .ExecuteDeleteAsync(context.CancellationToken);
         }
         catch (Exception e)
         {
             _logger.OutboxMessageCleanupError(e);
+
+            // We do not throw here, because we want the job to run again.
         }
     }
 }

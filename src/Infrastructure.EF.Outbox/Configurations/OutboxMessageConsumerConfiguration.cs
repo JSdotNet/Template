@@ -12,5 +12,7 @@ internal sealed class OutboxMessageConsumerConfiguration : IEntityTypeConfigurat
         builder.ToTable("OutboxConsumer");
 
         builder.HasKey(e => e.Id);
+
+        builder.Property(e => e.Name).IsRequired().HasMaxLength(200);
     }
 }

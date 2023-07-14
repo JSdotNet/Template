@@ -6,5 +6,3 @@ public interface IDomainEvent : INotification
 {
     Guid Id { get; }
 }
-
-public abstract record DomainEvent(Guid Id) : IDomainEvent;

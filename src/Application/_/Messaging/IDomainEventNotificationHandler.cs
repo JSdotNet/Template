@@ -4,7 +4,9 @@ using SolutionTemplate.Domain._;
 
 namespace SolutionTemplate.Application._.Messaging;
 
-public interface IDomainEventNotificationHandler<TDomainEvent> : INotificationHandler<TDomainEvent>
+
+
+public interface IDomainEventNotificationHandler<in TDomainEvent> : INotificationHandler<TDomainEvent>
     where TDomainEvent : IDomainEvent
 {
 }
