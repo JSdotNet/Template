@@ -20,8 +20,8 @@ Both files inherit the [`Directory.Build.props`](Directory.Build.Props) file in 
 Inheritance is done with the following line:
 `xml <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" /> `
 
-To make sure depencency injection can be setup in the responsible project I added a [`DependencyInjection`](src/DependencyInjection.cs) file in each project (with one exception that I'll mention later).
-Additionaly each project has a AssemblyReference class to get easy access to the Assembly of the project.
+To make sure dependency injection can be setup in the responsible project I added a [`DependencyInjection`](src/DependencyInjection.cs) file in each project (with one exception that I'll mention later).
+Additionally each project has a AssemblyReference class to get easy access to the Assembly of the project.
 
 ### EditorConfig
 
@@ -44,12 +44,14 @@ The last 2 are optional, but since most project I work on are Web API's with a d
 
 ### Logging
 
-In this project I used Serilog to setup logging. No specific reason, just that I had a sample available that I could use.
+In this project I used SeriLog to setup logging. No specific reason, just that I had a sample available that I could use.
 I intent to compare this to other other approaches at a later stage.
 
 My main requirement for logging is that it should log to Application Insights, with the possibility to log to the console during development.
 
-**TODO: When I add deployment to Azure, I also intent to look setting up Web App console logging.**
+```
+⚠️ TODO: When I add deployment to Azure, I also intent to look setting up Web App console logging.
+```
 
 ### Health checks
 
@@ -57,7 +59,7 @@ For ASP.Net applications I use the [AspNetCore.HealthChecks](https://learn.micro
 This package allows you to setup health checks for the application itself, but also for external dependencies like a database or a message queue.
 To configure this cleanly the health checks are added through the dependencyInjection classes I mentioned earlier. That way each project can define it's own health checks.
 
-Additionaly I created a extension method to map the health endpoint:
+Additionally I created a extension method to map the health endpoint:
 
 ```csharp
 public static class HealthCheckExtensions
@@ -102,8 +104,10 @@ builder.Services.AddHealthChecks().AddDependencies(config);
 app.MapHealthChecks();
 ```
 
-**TODO: At a later stage I'll look into possibilities to monitor the health of the application in Azure. Looks like an App Service can be configured to consume the health endpoint.
-Additionally I'll look into the possibility to push a health check information to Azure Application Insights. This may be a good way to monitor the health of the application in Azure.**
+```
+⚠️ TODO: At a later stage I'll look into possibilities to monitor the health of the application in Azure. Looks like an App Service can be configured to consume the health endpoint.
+Additionally I'll look into the possibility to push a health check information to Azure Application Insights. This may be a good way to monitor the health of the application in Azure.
+```
 
 I'm also considering if it would be a good idea to expose the health endpoints to Swagger. Could be useful during development.
 
@@ -139,7 +143,9 @@ To run the application in a Docker container, I added a Dockerfile to the WepApi
 On solution level I added a docker-compose file to run the application and a SQL Server database in a container.
 This allows me to run the application in a container on my local machine, but also in Azure. It also allows a developer to run the application without having to install any dependencies like SQL Server on his machine.
 
-**TODO: I think .Net 7 got better support for Docker, so I'll look into that at some point.**
+```
+⚠️ TODO: I think .Net 7 got better support for Docker, so I'll look into that at some point.
+```
 
 ### Database support
 
@@ -149,7 +155,9 @@ This sample project uses Entity Framework to access a database. The database is 
 
 Swagger is a great tool to document your API. It also allows you to test your API.
 
-**TODO... Some custom configuration was needed...**
+```
+⚠️ TODO... Some custom configuration was needed...
+```
 
 ## Domain Driven Design
 
@@ -194,7 +202,9 @@ The Domain project contains the following folders:
 The domain models should not throw exceptions. They should be valid at all times. For this reason I chose to work with a Result object.
 The Result object is a generic class that can be used to return a result or an error. It only support the Error struct, so all errors follow the same convention.
 
-**TODO: There may be better implementations of the Result class. I'll look into that at a later stage.**
+```
+⚠️ TODO: There may be better implementations of the Result class. I'll look into that at a later stage.
+```
 
 #### ValueObjects for Id's
 
@@ -211,7 +221,7 @@ The Application project is build on top of the domain layer. It contains the com
 It is setup using MediatR to implement the CQ(R)S pattern. I chose to use the repository pattern for commands, but not for queries.
 Queries get read only access to the database, so they can be optimized for performance.
 This does create a dependency on Entity Framework in the Application layer, but I think that is acceptable. I prefer a pragmatic approach over a purist approach.
-It is not possible to make database changes using the readonly datacontext, so commands are still forced to use the repository pattern.
+It is not possible to make database changes using the readonly DataContext, so commands are still forced to use the repository pattern.
 
 Cross cutting concerns like validation and logging are implemented using MediatR pipeline behaviors, so that as a developer you can focus on the business logic.
 Both Commands and Queries are validated using the FluentValidation package. This is done here, so the Domain layer does not have a dependency on the FluentValidation package.
@@ -223,14 +233,19 @@ Depending on the requirements, the command and query side could be split into se
 Another approach would be to have separate models for command and queries. The Domain models could be used for the commands while the queries would be based on for example [materialized views](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/management/materialized-views/materialized-view-overview).
 There are many ways to implement CQRS, so it is important to choose the right approach for your application. This template could still be a good starting for any of those approaches.
 
-### Infrastructure & Presention
+### Infrastructure & Presentation
 
 The Infrastructure and Presentation layers are responsible for the external dependencies and the presentation of the application.
 Each infrastructure project should have only one responsibility and should not be aware of the other infrastructure projects.
 
 For this template I added a Infrastructure project for the dependency to a SQL database and a Api project for the presentation layer.
-I added these project to test this project template, but real projects will probably have different infrastructure or presentation projects.
-Thats why I will not focus on these project in this document.
+I added these project to test this project template, but real projects may have different infrastructure or presentation requirements.
+Thats why I will not focus on these projects, except for specific concerns:
+
+- [Domain Event with Outbox pattern](src/Infrastructure.EF.Outbox/Outbox.md)
+
+
+
 
 ## Unit testing
 
@@ -244,9 +259,9 @@ For both Domain and Application tests I tried to write the test based on the req
 Each test method has a name that describes the requirement it is testing. This should make it easier to understand the test and to maintain them.
 
 I do not recommend Integration tests, since they are expensive to maintain and slow to run. Sometimes they are needed, so I added them to this template to see how they could be implemented.
-As they are setup in this template they can run in parallel using multiple docker containers and the Respawn package to reset the database.
+As they are setup in this template they can run in parallel using multiple docker containers and the ReSpawn package to reset the database.
 
-## Resources an inspiration:
+## Resources an inspiration
 
 While building this template I was inspired by the following resources:
 
