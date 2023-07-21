@@ -55,6 +55,7 @@ public static class CreateArticle
             else
             {
                 var result = Article.Create(request.Title, request.Content, author.Id, request.Tags);
+                
                 if (result.IsFailure)
                 {
                      return Result.Failure<Response>(result.Error!.Value); // TODO I do not like the .Value here...

@@ -7,7 +7,7 @@ using Quartz;
 using SolutionTemplate.Infrastructure.EF.Outbox.Entities;
 using SolutionTemplate.Infrastructure.EF.Outbox.Options;
 
-namespace SolutionTemplate.Infrastructure.EF.Outbox.Background;
+namespace SolutionTemplate.Infrastructure.EF.Outbox.Workers;
 
 [DisallowConcurrentExecution]
 internal sealed class OutboxMessageCleaner : IJob
@@ -31,6 +31,8 @@ internal sealed class OutboxMessageCleaner : IJob
                 .Where(m => m.ProcessedDateUtc != null &&
                             m.ProcessedDateUtc < DateTime.UtcNow.AddDays(-_options.Value.MessageRetentionInDays))
                 .ExecuteDeleteAsync(context.CancellationToken);
+
+            _logger.OutboxMessagesCleaned(_options.Value.MessageRetentionInDays);
         }
         catch (Exception e)
         {
@@ -45,4 +47,7 @@ public static partial class Log
 {
     [LoggerMessage(1, LogLevel.Error, "Error cleaning up Outbox messages")]
     public static partial void OutboxMessageCleanupError(this ILogger logger, Exception exception);
+
+    [LoggerMessage(2, LogLevel.Information, "Cleaned outbox messages older then {days} days")]
+    public static partial void OutboxMessagesCleaned(this ILogger logger, int days);
 }

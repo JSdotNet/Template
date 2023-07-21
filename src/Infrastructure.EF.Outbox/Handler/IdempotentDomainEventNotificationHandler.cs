@@ -30,7 +30,7 @@ public sealed class IdempotentDomainEventNotificationHandler<TDomainEvent> : IDo
         var consumer = _decorated.GetType().Name;
 
         if (await _dbContext.Set<OutboxMessageConsumer>().AnyAsync(c => 
-                c.Id == notification.Id &&
+                c.OutboxMessageId == notification.Id &&
                 c.Name == consumer, cancellationToken))
         {
             // Skip the message, it was already processed. 
@@ -49,7 +49,7 @@ public sealed class IdempotentDomainEventNotificationHandler<TDomainEvent> : IDo
         {
             _dbContext.Set<OutboxMessageConsumer>().Add(new OutboxMessageConsumer
             {
-                Id = notification.Id,
+                OutboxMessageId = notification.Id,
                 Name = consumer
             });
 

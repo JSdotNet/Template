@@ -2,7 +2,7 @@
 
 public sealed class OutboxMessageConsumer
 {
-    public Guid Id { get; init; }
+    public Guid OutboxMessageId { get; init; }
 
     public string Name { get; init; } = default!;
 }

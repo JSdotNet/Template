@@ -2,11 +2,9 @@
 
 public sealed class DomainEvents
 {
-    // The Aggregate is responsible for keeping track of its domain events.
-    private readonly List<IDomainEvent> _domainEvents = new();
-    public IReadOnlyList<IDomainEvent> Items => _domainEvents.AsReadOnly();
+    private readonly List<DomainEvent> _domainEvents = new();
+    public IReadOnlyList<DomainEvent> Items => _domainEvents.AsReadOnly();
 
-    public void Raise(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
-
-    public void Clear() => _domainEvents.Clear();
+    internal void Raise(DomainEvent domainEvent) => _domainEvents.Add(domainEvent);
+    internal void Clear() => _domainEvents.Clear();
 }

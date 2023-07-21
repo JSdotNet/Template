@@ -13,7 +13,7 @@ using Quartz;
 using SolutionTemplate.Domain._;
 using SolutionTemplate.Infrastructure.EF.Outbox.Entities;
 
-namespace SolutionTemplate.Infrastructure.EF.Outbox.Background;
+namespace SolutionTemplate.Infrastructure.EF.Outbox.Workers;
 
 [DisallowConcurrentExecution]
 internal sealed class OutboxMessageProcessor : IJob
@@ -87,6 +87,11 @@ internal sealed class OutboxMessageProcessor : IJob
 
         message.Error = policyResult.FinalException?.Message;
         message.ProcessedDateUtc = DateTime.UtcNow;
+
+        if (policyResult.FinalException is not null)
+        {
+            _logger.OutboxMessageError(policyResult.FinalException, message.Id);
+        }
     }
 }
 
@@ -97,7 +102,9 @@ public static partial class Log
     [LoggerMessage(0, LogLevel.Critical, "Failed to deserialize Outbox message {MessageId}")]
     public static partial void OutboxMessageDeserializeError(this ILogger logger, Guid messageId);
 
+    [LoggerMessage(1, LogLevel.Critical, "Error processing Outbox message {MessageId}")]
+    public static partial void OutboxMessageError(this ILogger logger, Exception exception, Guid messageId);
 
-    [LoggerMessage(1, LogLevel.Critical, "Error processing Outbox messages")]
+    [LoggerMessage(2, LogLevel.Critical, "Error processing Outbox messages")]
     public static partial void OutboxJobError(this ILogger logger, Exception exception);
 }

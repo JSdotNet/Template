@@ -5,10 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Quartz;
 
-using SolutionTemplate.Infrastructure.EF.Outbox.Background;
 using SolutionTemplate.Infrastructure.EF.Outbox.Handler;
 using SolutionTemplate.Infrastructure.EF.Outbox.Interceptors;
 using SolutionTemplate.Infrastructure.EF.Outbox.Options;
+using SolutionTemplate.Infrastructure.EF.Outbox.Workers;
 
 namespace SolutionTemplate.Infrastructure.EF.Outbox;
 
@@ -39,8 +39,8 @@ public static class DependencyInjection
         });
 
         services.AddQuartzHostedService();
-        
-        // TODO Dependency MediatR
+
+        // TODO Try to replace this with custom implementation of INotificationPublisher
         services.Decorate(typeof(INotificationHandler<>), typeof(IdempotentDomainEventNotificationHandler<>));
 
         return services;

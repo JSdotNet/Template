@@ -16,15 +16,15 @@ public sealed class ConvertDomainEventToOutboxInterceptor : SaveChangesIntercept
         if (dbContext is null)
             return base.SavingChangesAsync(eventData, result, cancellationToken);
 
-
+        // For all entities that implement IHasDomainEvents, get the domain events and add them to the Outbox.
         var events = dbContext.ChangeTracker.Entries<IHasDomainEvents>()
             .Select(x => x.Entity)
             .SelectMany(entityWithDomainEvents =>
             {
                 // Calling ToList so that we get a copy of the domain events, otherwise ClearDomainEvents will clear the events gathered here.
-                var domainEvents = entityWithDomainEvents.DomainEvents.Items.ToList();
+                var domainEvents = entityWithDomainEvents.DomainEvents.ToList();
 
-                entityWithDomainEvents.DomainEvents.Clear();
+                entityWithDomainEvents.Clear();
 
                 return domainEvents;
             })
