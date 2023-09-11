@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-using SolutionTemplate.Domain._;
+using SolutionTemplate.Domain._.Events;
 using SolutionTemplate.Infrastructure.EF.Outbox.Entities;
 
 namespace SolutionTemplate.Infrastructure.EF.Outbox.Interceptors;

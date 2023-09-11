@@ -1,6 +1,6 @@
 ﻿namespace SolutionTemplate.Domain._;
 
-public abstract class Entity
+public abstract class Entity : IHasId
 {
     public Guid Id { get; }
 

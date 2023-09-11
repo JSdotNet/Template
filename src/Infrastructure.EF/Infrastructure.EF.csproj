@@ -19,13 +19,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\Infrastructure.EF.Audit\Infrastructure.EF.Audit.csproj" />
     <ProjectReference Include="..\Infrastructure.EF.Outbox\Infrastructure.EF.Outbox.csproj" />
   </ItemGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Integration.Tests" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Update="Microsoft.Extensions.Diagnostics.HealthChecks" Version="7.0.9" />
   </ItemGroup>
 
 </Project>

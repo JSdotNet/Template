@@ -1,4 +1,4 @@
-﻿using SolutionTemplate.Domain._;
+﻿using SolutionTemplate.Domain._.Events;
 
 namespace SolutionTemplate.Domain;
 

@@ -1,6 +1,6 @@
-﻿namespace SolutionTemplate.Domain._;
+﻿namespace SolutionTemplate.Domain._.Events;
 
-public sealed class DomainEvents
+public sealed class DomainEventWrapper
 {
     private readonly List<DomainEvent> _domainEvents = new();
     public IReadOnlyList<DomainEvent> Items => _domainEvents.AsReadOnly();

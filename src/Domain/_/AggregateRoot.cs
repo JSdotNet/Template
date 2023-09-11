@@ -1,11 +1,13 @@
-﻿namespace SolutionTemplate.Domain._;
+﻿using SolutionTemplate.Domain._.Events;
+
+namespace SolutionTemplate.Domain._;
 
 public abstract class AggregateRoot : Entity, IHasDomainEvents
 {
     protected AggregateRoot(Guid id) : base(id) { }
 
-    protected DomainEvents DomainEvents { get; } = new();
+    protected DomainEventWrapper DomainEvents { get; } = new();
 
-    IReadOnlyList<DomainEvent> IHasDomainEvents.DomainEvents => DomainEvents.Items;
+    IReadOnlyList<IDomainEvent> IHasDomainEvents.DomainEvents => DomainEvents.Items;
     void IHasDomainEvents.Clear() => DomainEvents.Clear();
 }

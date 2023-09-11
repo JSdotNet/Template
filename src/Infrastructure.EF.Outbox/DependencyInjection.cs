@@ -19,9 +19,12 @@ public static class DependencyInjection
         services.AddSingleton<ConvertDomainEventToOutboxInterceptor>();
 
         var outboxOptions = configuration.GetSection(nameof(OutboxOptions)).Get<OutboxOptions>();
+        
+        services.ConfigureOptions<OutboxOptions>();
 
         services.AddQuartz(configure =>
         {
+            // TODO Can I move this to a separate initialization class? Can I use IOptionsMonitor<T>?
             var outboxMessageProcessorJobKey = new JobKey(nameof(OutboxMessageProcessor));
 
             configure.AddJob<OutboxMessageProcessor>(outboxMessageProcessorJobKey);
@@ -31,6 +34,7 @@ public static class DependencyInjection
 
             var outboxMessageCleanerJobKey = new JobKey(nameof(OutboxMessageCleaner));
 
+            // TODO I should probably use a Cron schedule here
             configure.AddJob<OutboxMessageCleaner>(outboxMessageCleanerJobKey);
             configure.AddTrigger(trigger => trigger.ForJob(outboxMessageCleanerJobKey)
                 .WithSimpleSchedule(schedule => schedule.WithIntervalInHours(outboxOptions?.MessageCleanupIntervalDays ?? 28).RepeatForever()));

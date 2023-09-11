@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 using SolutionTemplate.Application._.Messaging;
-using SolutionTemplate.Domain._;
+using SolutionTemplate.Domain._.Events;
 using SolutionTemplate.Infrastructure.EF.Outbox.Entities;
 
 namespace SolutionTemplate.Infrastructure.EF.Outbox.Handler;

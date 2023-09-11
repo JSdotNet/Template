@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-using SolutionTemplate.Domain._;
+using SolutionTemplate.Domain._.Events;
 
 namespace SolutionTemplate.Application._.Messaging;
 

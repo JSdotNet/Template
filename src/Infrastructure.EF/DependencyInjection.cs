@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using SolutionTemplate.Domain;
 using SolutionTemplate.Domain.Repository;
+
 using SolutionTemplate.Infrastructure.EF.Data;
 using SolutionTemplate.Infrastructure.EF.Migrator;
 using SolutionTemplate.Infrastructure.EF.Outbox;
-using SolutionTemplate.Infrastructure.EF.Outbox.Interceptors;
 using SolutionTemplate.Infrastructure.EF.Repository;
 
 namespace SolutionTemplate.Infrastructure.EF;
@@ -30,8 +31,9 @@ public static class DependencyInjection
                 sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
             });
 
-            // Get the interceptor from the EF.Outbox project and add it to the DataContext
-            options.AddInterceptors(provider.GetRequiredService<ConvertDomainEventToOutboxInterceptor>());
+            // Get all registered interceptors
+            var interceptors = provider.GetServices<SaveChangesInterceptor>().ToList();
+            options.AddInterceptors(interceptors);
         });
 
         // The outbox pattern requires the DbContext

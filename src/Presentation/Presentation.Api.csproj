@@ -12,8 +12,4 @@
     <ProjectReference Include="..\Application\Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="Microsoft.Extensions.Diagnostics.HealthChecks" Version="7.0.9" />
-  </ItemGroup>
-
 </Project>
