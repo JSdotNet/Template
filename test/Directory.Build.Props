@@ -3,24 +3,24 @@
 
   <!-- These packages are used in all test projects -->
   <ItemGroup>
-    <PackageReference Include="xunit" Version="2.5.0" />
-    <PackageReference Include="Moq" Version="4.18.4" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.3" />
-    <PackageReference Include="FluentAssertions" Version="6.11.0" />
-    <PackageReference Include="AutoFixture" Version="4.18.0" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="Moq" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="AutoFixture" />
   </ItemGroup>
 
   <!-- Add additional analyzers for test projects -->
   <ItemGroup>
-    <PackageReference Include="xunit.analyzers" Version="1.2.0">
+    <PackageReference Include="xunit.analyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Moq.Analyzers" Version="0.0.9">
+    <PackageReference Include="Moq.Analyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="FluentAssertions.Analyzers" Version="0.21.0">
+    <PackageReference Include="FluentAssertions.Analyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
