@@ -4,8 +4,8 @@ using Serilog;
 
 using SolutionTemplate.Infrastructure.EF.Migrator;
 using SolutionTemplate.Presentation.Api;
+using SolutionTemplate.Presentation.Api.Health;
 using SolutionTemplate.WebApi;
-using SolutionTemplate.WebApi.Health;
 using SolutionTemplate.WebApi.Middleware;
 
 

@@ -1,9 +1,10 @@
 using HealthChecks.UI.Client;
 
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Routing;
 
-
-namespace SolutionTemplate.WebApi.Health;
+namespace SolutionTemplate.Presentation.Api.Health;
 
 public static class HealthCheckExtensions
 {
