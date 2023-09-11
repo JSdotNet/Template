@@ -19,7 +19,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\Infrastructure.EF.Audit\Infrastructure.EF.Audit.csproj" />
     <ProjectReference Include="..\Infrastructure.EF.Outbox\Infrastructure.EF.Outbox.csproj" />
   </ItemGroup>
   <ItemGroup>
