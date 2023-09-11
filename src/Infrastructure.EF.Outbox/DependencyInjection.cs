@@ -38,8 +38,6 @@ public static class DependencyInjection
             configure.AddJob<OutboxMessageCleaner>(outboxMessageCleanerJobKey);
             configure.AddTrigger(trigger => trigger.ForJob(outboxMessageCleanerJobKey)
                 .WithSimpleSchedule(schedule => schedule.WithIntervalInHours(outboxOptions?.MessageCleanupIntervalDays ?? 28).RepeatForever()));
-
-            configure.UseMicrosoftDependencyInjectionJobFactory();
         });
 
         services.AddQuartzHostedService();
