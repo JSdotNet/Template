@@ -20,6 +20,21 @@ Both files inherit the [`Directory.Build.props`](Directory.Build.Props) file in 
 Inheritance is done with the following line:
 `xml <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" /> `
 
+The Directory.Build.Props and project file only contain the required packages, versions are managed with [Central package management](https://learn.microsoft.com/en-us/nuget/consume-packages/Central-Package-Management).
+This has the added advantage that als package version are defined in one place: [`Directory.Packages.Props`](Directory.Packages.Props).
+I have structured the file to seperate packages needed for test and added specific version pinnen to avoid vulnerable or deprecated packages.
+
+<!-- [![](https://mermaid.ink/img/pako:eNotjDkOgzAQRa9iTQ0XcJEi8gmAzqYY2eOA5CUyY6EIcfeYkF-9_2Y5wGZHIMGHvNsFC4vnZJJoUVrliGuaRd8_xKi3Yud7Mv7MoIec-a-mWzW6OnQQqbRj1z4flzHAC0UyIBs68lgDGzDpbKtYOY-fZEFyqdRBfTtkUiu-CkaQHsNG5xfEGTSE?type=png)](https://mermaid.live/edit#pako:eNotjDkOgzAQRa9iTQ0XcJEi8gmAzqYY2eOA5CUyY6EIcfeYkF-9_2Y5wGZHIMGHvNsFC4vnZJJoUVrliGuaRd8_xKi3Yud7Mv7MoIec-a-mWzW6OnQQqbRj1z4flzHAC0UyIBs68lgDGzDpbKtYOY-fZEFyqdRBfTtkUiu-CkaQHsNG5xfEGTSE) -->
+
+```mermaid
+flowchart TD
+    P[root\Directory.Packages.Props]
+    R[root\Directory.Build.Props]
+    R --> S[src\Directory.Build.Props]
+    R --> T[test\Directory.Build.Props]
+    S --> D[Domain\Directory.Build.Props]
+```
+
 To make sure dependency injection can be setup in the responsible project I added a [`DependencyInjection`](src/DependencyInjection.cs) file in each project (with one exception that I'll mention later).
 Additionally each project has a AssemblyReference class to get easy access to the Assembly of the project.
 
@@ -243,9 +258,6 @@ I added these project to test this project template, but real projects may have 
 Thats why I will not focus on these projects, except for specific concerns:
 
 - [Domain Event with Outbox pattern](src/Infrastructure.EF.Outbox/Outbox.md)
-
-
-
 
 ## Unit testing
 
