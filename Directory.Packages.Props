@@ -27,11 +27,11 @@
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10" />
     
     <!-- WebApi project -->
-    <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageVersion Include="Serilog.AspNetCore" Version="7.0.0" />
     <PackageVersion Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     
+
     <!-- Infrastructure.EF project -->
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10" />
@@ -47,7 +47,8 @@
     <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.7.0" />
     <PackageVersion Include="Scrutor" Version="4.2.2" />
     
-    <!-- TODO Review...      
+    <!-- TODO Review...  
+    <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
     <PackageVersion Include="Quartz.Extensions.DependencyInjection" Version="3.7.0" />
               
         
@@ -67,17 +68,20 @@
   <!-- Prevent Packages with vulnerabilities -->
   <ItemGroup>
     <!-- System.Net.Http > 4.3.0 -->
-    <!--<PackageVersion Include="System.Net.Http" Version="4.3.4" />-->
+    <PackageVersion Include="System.Net.Http" Version="4.3.4" />
+    
+    <!-- System.Text.RegularExpressions > 4.3.0 -->
+    <PackageVersion Include="System.Text.RegularExpressions" Version="4.3.1" />
+
     <!-- System.Drawing.Common > 5.0.0 -->
     <!--<PackageVersion Include="System.Drawing.Common" Version="7.0.0" />-->
-    <!-- System.Text.RegularExpressions > 4.3.0 -->
-    <!--<PackageVersion Include="System.Text.RegularExpressions" Version="4.3.1" />-->
   </ItemGroup>
   
   <!-- Prevent Deprecated packages -->
   <ItemGroup>
-    <!-- Microsoft.NETCore.Platforms > 5.0.0 -->
-    <!--<PackageVersion Include="Microsoft.NETCore.Platforms" Version="7.0.0" />-->
+    <PackageVersion Include="Serilog" Version="3.0.1" />
+    <PackageVersion Include="Microsoft.ApplicationInsights" Version="2.21.0" />
+    <PackageVersion Include="System.Formats.Asn1" Version="7.0.0" />
   </ItemGroup>
   
   <!-- Test packages-->

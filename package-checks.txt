@@ -1,0 +1,5 @@
+dotnet list package --vulnerable --include-transitive > vulnerable-packages.txt
+
+dotnet list package --deprecated --include-transitive > deprecated-packages.txt
+
+dotnet list package --outdated  --include-transitive > outdated -packages.txt
