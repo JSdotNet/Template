@@ -1,2 +1,2 @@
-﻿add-migration InitialCreate -project Infrastructure.EF -startupproject WebApi -context DataContext
+﻿add-migration InitialCreate -project Infrastructure.EF -startupproject Launcher -context DataContext
 

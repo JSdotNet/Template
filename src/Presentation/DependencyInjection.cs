@@ -48,7 +48,7 @@ public static class DependencyInjection
             options.SwaggerDoc("v1", new()
             {
                 Version = "v1",
-                Title = "WebApi",
+                Title = "Template API",
                 Description = "TODO ...",
 
             });

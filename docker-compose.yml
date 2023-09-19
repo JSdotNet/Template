@@ -5,10 +5,10 @@ services:
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
 
-  webapi:
-    image: ${DOCKER_REGISTRY-}webapi
+  template:
+    image: ${DOCKER_REGISTRY-}template
     build:
       context: .
-      dockerfile: src/WebApi/Dockerfile
+      dockerfile: src/Launcher/Dockerfile
     depends_on:
       - mssql

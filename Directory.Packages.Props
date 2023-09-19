@@ -25,10 +25,10 @@
     <!-- Presentation.API project -->
     <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="7.1.0" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10" />
-    
-    <!-- WebApi project -->
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageVersion Include="Serilog.AspNetCore" Version="7.0.0" />
+
+    <!-- Launcher project -->    
     <PackageVersion Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
     
 

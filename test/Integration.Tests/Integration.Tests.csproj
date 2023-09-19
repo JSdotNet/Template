@@ -9,6 +9,6 @@
     <PackageReference Include="Testcontainers.MsSql" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\WebApi\WebApi.csproj" />
+    <ProjectReference Include="..\..\src\Launcher\Launcher.csproj" />
   </ItemGroup>
 </Project>

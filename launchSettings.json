@@ -5,7 +5,7 @@
       "commandVersion": "1.0",
       "serviceActions": {
         "mssql": "StartWithoutDebugging",
-        "webapi": "StartDebugging"
+        "template": "StartDebugging"
       }
     }
   }

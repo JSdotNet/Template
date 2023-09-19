@@ -12,7 +12,7 @@ services:
     networks:
       - backend
 
-  webapi:
+  template:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80

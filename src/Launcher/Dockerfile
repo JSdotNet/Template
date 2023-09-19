@@ -9,16 +9,16 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["src/Directory.Build.Props", "src/"]
 COPY ["Directory.Build.Props", "."]
-COPY ["src/WebApi/WebApi.csproj", "src/WebApi/"]
-RUN dotnet restore "src/WebApi/WebApi.csproj"
+COPY ["src/Launcher/Launcher.csproj", "src/Launcher/"]
+RUN dotnet restore "src/Launcher/Launcher.csproj"
 COPY . .
-WORKDIR "/src/src/WebApi"
-RUN dotnet build "WebApi.csproj" -c Release -o /app/build
+WORKDIR "/src/src/Launcher"
+RUN dotnet build "Launcher.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "WebApi.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Launcher.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "WebApi.dll"]
+ENTRYPOINT ["dotnet", "Launcher.dll"]

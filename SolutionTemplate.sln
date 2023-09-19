@@ -35,7 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Tests", "test\Domain
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation.Api", "src\Presentation\Presentation.Api.csproj", "{2BDB9234-558A-4BE6-9B5C-B532758CF5C6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "src\WebApi\WebApi.csproj", "{5F292A46-C73B-4E08-A9AA-67934272254E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Launcher", "src\Launcher\Launcher.csproj", "{5F292A46-C73B-4E08-A9AA-67934272254E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{1D4F0AF3-0601-44EB-B11F-84DEB8A45123}"
 EndProject
