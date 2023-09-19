@@ -58,7 +58,9 @@ public abstract class DomainRules
         var referencedAssemblies = DomainAssembly.GetReferencedAssemblies()
             .Where(x => 
                 !x.Name!.StartsWith("System", true, CultureInfo.InvariantCulture) && 
-                !x.Name.StartsWith("Microsoft", true, CultureInfo.InvariantCulture)).ToArray();
+                !x.Name.StartsWith("Microsoft", true, CultureInfo.InvariantCulture) &&
+                !x.Name.StartsWith("MediatR.Contracts", true, CultureInfo.InvariantCulture)) // Accepting MediatR is a compromise...
+            .ToArray();
 
         // Assert
         Assert.Empty(referencedAssemblies);

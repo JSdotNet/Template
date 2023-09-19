@@ -2,6 +2,7 @@
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 using Quartz;
 
@@ -17,10 +18,11 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructureEfOutbox(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<ConvertDomainEventToOutboxInterceptor>();
+        //services.AddSingleton<IConfigureOptions<OutboxOptions>, OutboxOptionsSetup>();
 
         var outboxOptions = configuration.GetSection(nameof(OutboxOptions)).Get<OutboxOptions>();
         
-        services.ConfigureOptions<OutboxOptions>();
+        //services.ConfigureOptions<OutboxOptions>();
 
         services.AddQuartz(configure =>
         {
