@@ -1,8 +1,12 @@
 using System.Globalization;
 
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+
 using Serilog;
 
 using SolutionTemplate.Infrastructure.EF.Migrator;
+using SolutionTemplate.Infrastructure.EF.Outbox.Options;
 using SolutionTemplate.Presentation.Api;
 using SolutionTemplate.Presentation.Api.Health;
 using SolutionTemplate.WebApi;
@@ -22,10 +26,9 @@ builder.Host.UseSerilog((context, configuration) =>
         .WriteTo.Console(formatProvider: CultureInfo.CurrentCulture);
 });
 
-// Setup controllers in the presentation project
-builder.Services
-    .AddControllers()
-    .AddApplicationPart(AssemblyReference.Assembly);
+
+// TODO Review... 
+builder.Services.AddOptions();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -104,7 +107,6 @@ app.UseMiddleware<ExceptionHandlerMiddleware>();
 //app.UseHttpsRedirection();
 //app.UseAuthorization();
 
-app.MapControllers();
 app.MapEndpoints(config);
 app.MapHealthChecks();
 

@@ -12,8 +12,6 @@ public static class DependencyInjection
     {
         var assembly = typeof(DependencyInjection).Assembly;
 
-        
-
         return services;
     }
 
@@ -23,8 +21,9 @@ public static class DependencyInjection
         return builder;
     }
 
-    public static IEndpointRouteBuilder MapEndpoints(this IEndpointRouteBuilder endpoints, IConfiguration options)
+    public static void MapEndpoints(this IEndpointRouteBuilder endpoints, IConfiguration options)
     {
-        return endpoints.MapArticleEndpoints(options);
+        endpoints.MapArticleEndpoints(options);
+        endpoints.MapAuthorEndpoints(options);
     }
 }
