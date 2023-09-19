@@ -17,11 +17,12 @@ internal sealed class ArticleConfiguration : IEntityTypeConfiguration<Article>
             .HasForeignKey(p => p.AuthorId);
 
         builder.Property(nameof(Article.Tags))
-            //.HasField("_tags")
+            .HasField("_tags")
+            .UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasConversion(new ValueConverter<IReadOnlyList<string>, string>
             (
                 v => string.Join(";", v), 
-                v => v.Split(new[] { ';' })
+                v => v.Split(new[] { ';' }).ToList()
             ));
     }
 }
