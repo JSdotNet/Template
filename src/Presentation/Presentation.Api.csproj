@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="MediatR" />
+    <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>

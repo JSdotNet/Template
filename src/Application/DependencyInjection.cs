@@ -13,7 +13,7 @@ namespace SolutionTemplate.Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration _)
+    public static void AddApplication(this IServiceCollection services, IConfiguration _)
     {
         services.AddMediatR(configuration =>
         {
@@ -27,8 +27,6 @@ public static class DependencyInjection
         });
 
         services.AddValidatorsFromAssembly(AssemblyReference.Assembly, includeInternalTypes: true);
-
-        return services;
     }
 
     public static IHealthChecksBuilder AddApplication(this IHealthChecksBuilder builder, IConfiguration _)

@@ -2,7 +2,6 @@
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 using Quartz;
 
@@ -15,7 +14,7 @@ namespace SolutionTemplate.Infrastructure.EF.Outbox;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructureEfOutbox(this IServiceCollection services, IConfiguration configuration)
+    public static void AddInfrastructureEfOutbox(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<ConvertDomainEventToOutboxInterceptor>();
         //services.AddSingleton<IConfigureOptions<OutboxOptions>, OutboxOptionsSetup>();
@@ -46,7 +45,5 @@ public static class DependencyInjection
 
         // TODO Try to replace this with custom implementation of INotificationPublisher
         services.Decorate(typeof(INotificationHandler<>), typeof(IdempotentDomainEventNotificationHandler<>));
-
-        return services;
     }
 }

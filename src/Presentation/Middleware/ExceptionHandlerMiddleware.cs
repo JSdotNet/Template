@@ -3,7 +3,9 @@
 using FluentValidation;
 using FluentValidation.Results;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json;
 
@@ -12,7 +14,7 @@ using SolutionTemplate.Application._.Behaviors;
 
 using ApplicationException = SolutionTemplate.Application._.Behaviors.ApplicationException;
 
-namespace SolutionTemplate.WebApi.Middleware;
+namespace SolutionTemplate.Presentation.Api.Middleware;
 
 internal sealed class ExceptionHandlerMiddleware : IMiddleware
 {

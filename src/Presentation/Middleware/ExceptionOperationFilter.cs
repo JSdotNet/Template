@@ -4,7 +4,7 @@ using Microsoft.OpenApi.Models;
 
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace SolutionTemplate.WebApi.Middleware;
+namespace SolutionTemplate.Presentation.Api.Middleware;
 
 internal sealed class ExceptionOperationFilter : IOperationFilter
 {

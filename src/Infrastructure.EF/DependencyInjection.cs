@@ -15,7 +15,7 @@ namespace SolutionTemplate.Infrastructure.EF;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructureEf(this IServiceCollection services, IConfiguration configuration)
+    public static void AddInfrastructureEf(this IServiceCollection services, IConfiguration configuration)
     {
         var assembly = typeof(DependencyInjection).Assembly;
 
@@ -50,8 +50,6 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork>(provider => provider.GetService<DataContext>()!);
 
         services.AddTransient<IDatabaseMigrator, DatabaseMigrator>();
-
-        return services;
     }
 
     public static IHealthChecksBuilder AddInfrastructureEf(this IHealthChecksBuilder builder, IConfiguration configuration)
