@@ -188,13 +188,11 @@ Following the guidelines of DDD, the project is build up in 4 layers:
 In this solution I chose to separate those in 2 folders: Core and External.
 
 - Core contains the Domain and Application layers. They should not be dependent on or aware of any other the other layers. By focussing on the Domain and Application layers, the business logic is separated external dependencies.
-- External contains the Infrastructure and Presentation layers. They are responsible for the external dependencies and the presentation of the application. There can be multiple Infrastructure and Presentation project. For example, you could have a WebApi and a WebMvc project in the Presentation layer. Or you could have a SQL Server and a MongoDB project in the Infrastructure layer.
+- External contains the Infrastructure and Presentation layers. They are responsible for the external dependencies and the presentation of the application. There can be multiple Infrastructure and Presentation project. For example, you could have a WebApi and a ASP.Net Mvc project in the Presentation layer. Or you could have a SQL Server and a MongoDB project in the Infrastructure layer.
 
-The WebApi project is used to ty everything together.
-I chose **not** to use the presentation layer to ty everything together, because it would make it harder to separate the presentation from the infrastructure.
+The Launcher project is used to tie everything together. I chose **not** to use the presentation layer to ty everything together, because it would make it harder to separate the presentation from the infrastructure. The launcher project should not depend on any infrastructure, it should delegate the initialization to the other projects.
 
-For this template I added a _ (underscore) folder to ech project. This folder contains so building block each layer uses that could be move to a package. By naming it with a _ it is always the first folder in the project.
-I think this makes it clear that the folder is not part of the project, but is used to build the project. I did have to disable code analysis CA1707 to make this possible...
+For this template I added an '_' (underscore) folder to each project. This folder contains a building block each layer uses that could be moved to a package. By naming it with an '_' it is always the first folder in the project. I think this makes it clear that the folder is not part of the project, but is used to build the project. I did have to disable code analysis CA1707 to make this possible...
 
 ### Domain
 
@@ -212,7 +210,7 @@ The Domain project contains the following folders:
 - Events: This folder contains the domain events.
 - Errors: By grouping the errors in a separate folder, it is easier to see which errors are used by the domain.
 
-#### Result class
+#### Result object
 
 The domain models should not throw exceptions. They should be valid at all times. For this reason I chose to work with a Result object.
 The Result object is a generic class that can be used to return a result or an error. It only support the Error struct, so all errors follow the same convention.
@@ -248,12 +246,22 @@ Depending on the requirements, the command and query side could be split into se
 Another approach would be to have separate models for command and queries. The Domain models could be used for the commands while the queries would be based on for example [materialized views](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/management/materialized-views/materialized-view-overview).
 There are many ways to implement CQRS, so it is important to choose the right approach for your application. This template could still be a good starting for any of those approaches.
 
-### Infrastructure & Presentation
+### Presentation
 
-The Infrastructure and Presentation layers are responsible for the external dependencies and the presentation of the application.
+To test my domain and application layer I added an API project as presentation layer. I chose to use minimal API instead of controllers, just to see how that works.
+It does seem to be a bit cleaner, but I do not yet see any real benefits compared to controllers... I does seem to be the direction Microsoft is heading, so I'll use it here to get some experience with it.
+
+Not every application will require and API, but in my experience, it is the most common scenario. The UI would most likely be build using either Angular or React, which I may include in this template at a later stage. Depending on the consumer I would also consider using separate request and response models instead of using the ones from the Application layer. For now this API is enough to test the Domain and Application layers.
+
+An interesting alternative may be to use a Blazor frontend. This would reduce the complexity as it would replace both the API and the UI with one single presentation project.
+I do however have doubts related to the future of Blazor, so I'm not sure if I could recommend it at this point.
+
+### Infrastructure
+
+The Infrastructure layers are responsible for the external dependencies and the presentation of the application.
 Each infrastructure project should have only one responsibility and should not be aware of the other infrastructure projects.
 
-For this template I added a Infrastructure project for the dependency to a SQL database and a Api project for the presentation layer.
+For this template I added an infrastructure project for the dependency to a SQL database.
 I added these project to test this project template, but real projects may have different infrastructure or presentation requirements.
 Thats why I will not focus on these projects, except for specific concerns:
 
@@ -273,7 +281,7 @@ Each test method has a name that describes the requirement it is testing. This s
 I do not recommend Integration tests, since they are expensive to maintain and slow to run. Sometimes they are needed, so I added them to this template to see how they could be implemented.
 As they are setup in this template they can run in parallel using multiple docker containers and the ReSpawn package to reset the database.
 
-## Resources an inspiration
+## Resources and inspiration
 
 While building this template I was inspired by the following resources:
 
