@@ -19,8 +19,8 @@ public sealed class Article : AggregateRoot
     public DateTime LastUpdated { get; private set; } = DateTime.UtcNow;
 
     
-    private readonly List<Tag> _tags = new();
-    public IReadOnlyList<Tag> Tags => _tags.AsReadOnly();
+    private readonly List<string> _tags = new();
+    public IReadOnlyList<string> Tags => _tags.AsReadOnly();
 
 
     public static Result<Article> Create(string title, string content, Guid author, params string[] tags)
@@ -39,7 +39,7 @@ public sealed class Article : AggregateRoot
         };
 
 
-        article._tags.AddRange(tags.Select(x => new Tag(x)));
+        article._tags.AddRange(tags);
 
         article.DomainEvents.Raise(new DomainEvents.ArticleCreated(article.Id));
 
@@ -58,15 +58,9 @@ public sealed class Article : AggregateRoot
 
     public Result AddTag(string name)
     {
-        _tags.Add(new Tag(name));
+        _tags.Add(name);
         LastUpdated = DateTime.UtcNow;
 
         return Result.Success();
     }
 }
-
-
-
-
-[DebuggerDisplay("{Name}")]
-public sealed record Tag(string Name);

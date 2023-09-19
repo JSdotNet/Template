@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 using SolutionTemplate.Domain.Models;
 
@@ -13,13 +14,14 @@ internal sealed class ArticleConfiguration : IEntityTypeConfiguration<Article>
 
         builder.HasOne<Author>()
             .WithMany()
-            .HasForeignKey(p => p.AuthorId); 
+            .HasForeignKey(p => p.AuthorId);
 
-
-        builder.OwnsMany(a => a.Tags, at =>
-        {
-            //at.WithOwner().HasForeignKey(nameof(ArticleId));
-            at.HasKey(nameof(Tag.Name));
-        });
+        builder.Property(nameof(Article.Tags))
+            //.HasField("_tags")
+            .HasConversion(new ValueConverter<IReadOnlyList<string>, string>
+            (
+                v => string.Join(";", v), 
+                v => v.Split(new[] { ';' })
+            ));
     }
 }

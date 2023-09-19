@@ -84,6 +84,6 @@ public class ArticleTests
         Assert.IsType<Result>(result);
         Assert.True(result.IsSuccess);
         Assert.Equal(4, article.Tags.Count);
-        Assert.Equal(tagName, article.Tags[3].Name);
+        Assert.Equal(tagName, article.Tags[3]);
     }
 }

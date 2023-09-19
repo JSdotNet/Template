@@ -29,7 +29,7 @@ public static class GetArticles
 
             if (request.Tags is { Length: > 0 })
             {
-                query = query.Where(article => article.Tags.Any(tag => request.Tags.Any(i => i == tag.Name)));
+                query = query.Where(article => article.Tags.Any(tag => request.Tags.Any(i => i == tag)));
             }
 
             Expression<Func<Article, object>> selector = request.SortColumn?.ToLower(CultureInfo.InvariantCulture) switch
@@ -53,5 +53,5 @@ public static class GetArticles
         }
     }
 
-    public sealed record Response(string Title, DateTime CreatedAt, IReadOnlyList<Tag> Tags);
+    public sealed record Response(string Title, DateTime CreatedAt, IReadOnlyList<string> Tags);
 }

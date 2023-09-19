@@ -1,2 +1,2 @@
-﻿add-migration InitialCreate -project Infrastructure.EF -startupproject Launcher -context DataContext
+﻿add-migration SimpleTags -project Infrastructure.EF -startupproject Infrastructure.EF -context DataContext
 
