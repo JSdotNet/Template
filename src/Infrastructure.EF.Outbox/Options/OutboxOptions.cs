@@ -2,6 +2,8 @@
 
 public sealed class OutboxOptions
 {
+    public int SimultaneousMessages { get; set; } = 20;
+
     public int MessageProcessorIntervalInSeconds { get; set; } = 10;
 
     public int MessageCleanupIntervalDays { get; set; } = 7;

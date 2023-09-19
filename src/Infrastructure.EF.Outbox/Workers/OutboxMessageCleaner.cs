@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -12,27 +13,33 @@ namespace SolutionTemplate.Infrastructure.EF.Outbox.Workers;
 [DisallowConcurrentExecution]
 internal sealed class OutboxMessageCleaner : IJob
 {
-    private readonly DbContext _dbContext;
     private readonly ILogger _logger;
-    private readonly IOptions<OutboxOptions> _options;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly IOptionsMonitor<OutboxOptions> _options;
 
-    public OutboxMessageCleaner(DbContext dbContext, ILogger<OutboxMessageCleaner> logger, IOptions<OutboxOptions> options)
+    public OutboxMessageCleaner(IServiceProvider serviceProvider, IOptionsMonitor<OutboxOptions> options, ILogger<OutboxMessageCleaner> logger)
     {
-        _dbContext = dbContext;
-        _logger = logger;
+        _serviceProvider = serviceProvider;
         _options = options;
+        _logger = logger;     
     }
 
     public async Task Execute(IJobExecutionContext context)
     {
         try
         {
-            await _dbContext.Set<OutboxMessage>()
+            var option = _options.CurrentValue;
+
+            using var scope = _serviceProvider.CreateScope();
+
+            var dbContext = scope.ServiceProvider.GetRequiredService<DbContext>();
+
+            await dbContext.Set<OutboxMessage>()
                 .Where(m => m.ProcessedDateUtc != null &&
-                            m.ProcessedDateUtc < DateTime.UtcNow.AddDays(-_options.Value.MessageRetentionInDays))
+                            m.ProcessedDateUtc < DateTime.UtcNow.AddDays(-option.MessageRetentionInDays))
                 .ExecuteDeleteAsync(context.CancellationToken);
 
-            _logger.OutboxMessagesCleaned(_options.Value.MessageRetentionInDays);
+            _logger.OutboxMessagesCleaned(option.MessageRetentionInDays);
         }
         catch (Exception e)
         {
@@ -45,7 +52,7 @@ internal sealed class OutboxMessageCleaner : IJob
 
 public static partial class Log
 {
-    [LoggerMessage(1, LogLevel.Error, "Error cleaning up Outbox messages")]
+    [LoggerMessage(1, LogLevel.Critical, "Error cleaning up Outbox messages")]
     public static partial void OutboxMessageCleanupError(this ILogger logger, Exception exception);
 
     [LoggerMessage(2, LogLevel.Information, "Cleaned outbox messages older then {days} days")]

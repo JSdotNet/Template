@@ -1,8 +1,11 @@
-﻿using MediatR;
+﻿using System.Linq;
+
+using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 using Newtonsoft.Json;
 
@@ -12,6 +15,7 @@ using Quartz;
 
 using SolutionTemplate.Domain._.Events;
 using SolutionTemplate.Infrastructure.EF.Outbox.Entities;
+using SolutionTemplate.Infrastructure.EF.Outbox.Options;
 
 namespace SolutionTemplate.Infrastructure.EF.Outbox.Workers;
 
@@ -19,11 +23,13 @@ namespace SolutionTemplate.Infrastructure.EF.Outbox.Workers;
 internal sealed class OutboxMessageProcessor : IJob
 {
     private readonly IServiceProvider _serviceProvider;
+    private readonly IOptionsMonitor<OutboxOptions> _options;
     private readonly ILogger _logger;
 
-    public OutboxMessageProcessor(IServiceProvider serviceProvider, ILogger<OutboxMessageProcessor> logger)
+    public OutboxMessageProcessor(IServiceProvider serviceProvider, IOptionsMonitor<OutboxOptions> options, ILogger<OutboxMessageProcessor> logger)
     {
         _serviceProvider = serviceProvider;
+        _options = options;
         _logger = logger;
     }
 
@@ -31,6 +37,8 @@ internal sealed class OutboxMessageProcessor : IJob
     {
         try
         {
+            var options = _options.CurrentValue;
+
             using var scope = _serviceProvider.CreateScope();
 
             var dbContext = scope.ServiceProvider.GetRequiredService<DbContext>();
@@ -38,7 +46,7 @@ internal sealed class OutboxMessageProcessor : IJob
             var messages = await dbContext.Set<OutboxMessage>()
                 .Where(m => m.ProcessedDateUtc == null)
                 .OrderBy(m => m.OccurredOnUtc)
-                .Take(20)
+                .Take(options.SimultaneousMessages)
                 .ToListAsync(context.CancellationToken);
 
             if (!messages.Any())
