@@ -24,7 +24,7 @@ internal sealed class OutboxMessageProcessor : BackgroundService
 
     public OutboxMessageProcessor(IServiceProvider serviceProvider, IOptions<OutboxOptions> options, ILogger<OutboxMessageProcessor> logger)
     {
-        _serviceProvider = serviceProvider;     
+        _serviceProvider = serviceProvider;
         _logger = logger;
 
         // We will reevaluate the options each run, but we need the interval te start with.

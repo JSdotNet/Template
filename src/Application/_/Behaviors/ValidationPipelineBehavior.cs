@@ -34,14 +34,9 @@ internal sealed class ValidationPipelineBehavior<TRequest, TResponse> : IPipelin
             .ToArray();
 
 
-        if (errors.Any())
-        {
-            return CreateValidationResult<TResponse>(errors);
-        }
-
-
-
-        return await next();
+        return errors.Any()
+            ? CreateValidationResult<TResponse>(errors)
+            : await next();
     }
 
     private static TResult CreateValidationResult<TResult>(Error[] errors)

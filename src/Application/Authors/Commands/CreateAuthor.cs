@@ -37,9 +37,7 @@ public static class CreateAuthor
 
             var result = Author.Create(request.Email, request.Firstname, request.Lastname);
             if (result.IsFailure)
-            {
-                 return Result.Failure<Guid>(result.Error!.Value); // TODO I do not like the .Value here...
-            }
+                return Result.Failure<Guid>(result.Error!.Value); // TODO I do not like the .Value here...
 
             _authorRepository.Add(result);
 

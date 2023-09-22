@@ -26,7 +26,7 @@ internal sealed class OutboxMessageCleaner : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (!stoppingToken.IsCancellationRequested) 
+        while (!stoppingToken.IsCancellationRequested)
         {
             await RunTimedLoop(stoppingToken);
         }

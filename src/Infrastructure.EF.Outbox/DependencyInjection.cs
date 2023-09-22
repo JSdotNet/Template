@@ -14,7 +14,7 @@ namespace SolutionTemplate.Infrastructure.EF.Outbox;
 
 public static class DependencyInjection
 {
-    public static void AddInfrastructureEfOutbox(this IServiceCollection services, IConfiguration configuration)
+    public static void AddInfrastructureEfOutbox(this IServiceCollection services, IConfiguration _)
     {
         services.AddOptions<OutboxOptions>(); //.Configure(options => configuration.GetSection(nameof(OutboxOptions)).Bind(options));
         services.AddTransient<IConfigureOptions<OutboxOptions>, OutboxOptionsSetup>();

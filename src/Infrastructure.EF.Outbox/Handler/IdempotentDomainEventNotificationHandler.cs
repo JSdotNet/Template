@@ -29,14 +29,14 @@ public sealed class IdempotentDomainEventNotificationHandler<TDomainEvent> : IDo
     {
         var consumer = _decorated.GetType().Name;
 
-        if (await _dbContext.Set<OutboxMessageConsumer>().AnyAsync(c => 
+        if (await _dbContext.Set<OutboxMessageConsumer>().AnyAsync(c =>
                 c.OutboxMessageId == notification.Id &&
                 c.Name == consumer, cancellationToken))
         {
             // Skip the message, it was already processed. 
             return;
         }
-       
+
         await _decorated.Handle(notification, cancellationToken);
 
         // Register that the message was processed, so we can skip it next time.

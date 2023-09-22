@@ -9,7 +9,6 @@ using SolutionTemplate.Domain.Repository;
 using SolutionTemplate.Infrastructure.EF.Data;
 using SolutionTemplate.Infrastructure.EF.Migrator;
 using SolutionTemplate.Infrastructure.EF.Outbox;
-using SolutionTemplate.Infrastructure.EF.Outbox.Interceptors;
 using SolutionTemplate.Infrastructure.EF.Repository;
 
 namespace SolutionTemplate.Infrastructure.EF;
@@ -46,7 +45,7 @@ public static class DependencyInjection
         services.AddScoped<IArticleRepository, ArticleRepository>();
         services.AddScoped<IAuthorRepository, AuthorRepository>();
 
-        
+
         services.AddScoped<IUnitOfWork>(provider => provider.GetService<DataContext>()!);
 
         services.AddTransient<IDatabaseMigrator, DatabaseMigrator>();

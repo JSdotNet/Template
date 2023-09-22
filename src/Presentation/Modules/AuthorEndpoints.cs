@@ -12,7 +12,7 @@ using SolutionTemplate.Application.Authors.Queries;
 namespace SolutionTemplate.Presentation.Api.Modules;
 
 
-public static class AuthorEndpoints 
+public static class AuthorEndpoints
 {
     public static void MapAuthorEndpoints(this IEndpointRouteBuilder app, IConfiguration _)
     {

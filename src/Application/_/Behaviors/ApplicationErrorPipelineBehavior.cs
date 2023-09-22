@@ -17,7 +17,7 @@ internal sealed class ApplicationErrorPipelineBehavior<TRequest, TResponse> : IP
             // Middleware should catch these exceptions and return a 404
             throw new ApplicationException(code, response.Error!.Value.Message);
         }
-        
+
         // Application errors above are mapped specifically, so that middleware can return the correct status code
         // Domain errors below are mapped to one response type
         if (response.IsFailure)
