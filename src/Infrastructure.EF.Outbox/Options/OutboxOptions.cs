@@ -2,7 +2,7 @@
 
 public sealed class OutboxOptions
 {
-    public int SimultaneousMessages { get; set; } = 20;
+    public int MessageProcessorSimultaneousMessages { get; set; } = 20;
 
     public int MessageProcessorIntervalInSeconds { get; set; } = 10;
 

@@ -40,7 +40,8 @@ public sealed class ConvertDomainEventToOutboxInterceptor : SaveChangesIntercept
             })
             .ToList();
 
-        dbContext.Set<OutboxMessage>().AddRange(events);
+        if (events.Any())
+            dbContext.Set<OutboxMessage>().AddRange(events);
 
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }

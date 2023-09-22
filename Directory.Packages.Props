@@ -43,8 +43,6 @@
     <!-- Infrastructure.EF.OutBox project -->
     <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
     <PackageVersion Include="Polly" Version="7.2.4" />
-    <PackageVersion Include="Quartz" Version="3.7.0" />
-    <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.7.0" />
     <PackageVersion Include="Scrutor" Version="4.2.2" />
     
     <!-- TODO Review...  

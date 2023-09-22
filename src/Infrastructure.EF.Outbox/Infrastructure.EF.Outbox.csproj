@@ -6,8 +6,6 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Polly" />
-    <PackageReference Include="Quartz" />
-    <PackageReference Include="Quartz.Extensions.Hosting" />
     <PackageReference Include="Scrutor" />
   </ItemGroup>
   <ItemGroup>

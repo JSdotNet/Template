@@ -1,45 +1,56 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-
-using Quartz;
 
 using SolutionTemplate.Infrastructure.EF.Outbox.Entities;
 using SolutionTemplate.Infrastructure.EF.Outbox.Options;
 
 namespace SolutionTemplate.Infrastructure.EF.Outbox.Workers;
 
-[DisallowConcurrentExecution]
-internal sealed class OutboxMessageCleaner : IJob
+internal sealed class OutboxMessageCleaner : BackgroundService
 {
     private readonly ILogger _logger;
     private readonly IServiceProvider _serviceProvider;
-    private readonly IOptionsMonitor<OutboxOptions> _options;
+    private int _intervalInSeconds;
 
-    public OutboxMessageCleaner(IServiceProvider serviceProvider, IOptionsMonitor<OutboxOptions> options, ILogger<OutboxMessageCleaner> logger)
+    public OutboxMessageCleaner(IServiceProvider serviceProvider, IOptions<OutboxOptions> options, ILogger<OutboxMessageCleaner> logger)
     {
         _serviceProvider = serviceProvider;
-        _options = options;
-        _logger = logger;     
+        _logger = logger;
+
+        // We will reevaluate the options each run, but we need the interval te start with.
+        _intervalInSeconds = options.Value.MessageProcessorIntervalInSeconds;
     }
 
-    public async Task Execute(IJobExecutionContext context)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        while (!stoppingToken.IsCancellationRequested) 
+        {
+            await RunTimedLoop(stoppingToken);
+        }
+    }
+
+    private async Task RunTimedLoop(CancellationToken stoppingToken)
     {
         try
         {
-            var option = _options.CurrentValue;
+            using PeriodicTimer timer = new(TimeSpan.FromDays(_intervalInSeconds)); // TODO Support Cron schedule?
 
-            using var scope = _serviceProvider.CreateScope();
+            while (await timer.WaitForNextTickAsync(stoppingToken))
+            {
+                var intervalInSeconds = await ProcessScopedRun(stoppingToken);
 
-            var dbContext = scope.ServiceProvider.GetRequiredService<DbContext>();
+                if (_intervalInSeconds != intervalInSeconds)
+                {
+                    _intervalInSeconds = intervalInSeconds;
 
-            await dbContext.Set<OutboxMessage>()
-                .Where(m => m.ProcessedDateUtc != null &&
-                            m.ProcessedDateUtc < DateTime.UtcNow.AddDays(-option.MessageRetentionInDays))
-                .ExecuteDeleteAsync(context.CancellationToken);
-
-            _logger.OutboxMessagesCleaned(option.MessageRetentionInDays);
+                    // The options have changed, so we need to stop this job and let the host restart it.
+                    timer.Dispose();
+                    return;
+                }
+            }
         }
         catch (Exception e)
         {
@@ -47,6 +58,32 @@ internal sealed class OutboxMessageCleaner : IJob
 
             // We do not throw here, because we want the job to run again.
         }
+    }
+
+    private async Task<int> ProcessScopedRun(CancellationToken stoppingToken)
+    {
+        using var scope = _serviceProvider.CreateScope();
+
+        var optionsSnapshot = scope.ServiceProvider.GetRequiredService<IOptionsSnapshot<OutboxOptions>>();
+        var options = optionsSnapshot.Value;
+
+        await CleanupMessages(scope, options, stoppingToken);
+
+        return options.MessageCleanupIntervalDays;
+    }
+
+
+    private async Task CleanupMessages(IServiceScope scope, OutboxOptions options, CancellationToken stoppingToken)
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<DbContext>();
+
+        await dbContext.Set<OutboxMessage>()
+            .Where(m =>
+                m.ProcessedDateUtc != null &&
+                m.ProcessedDateUtc < DateTime.UtcNow.AddDays(-options.MessageRetentionInDays))
+            .ExecuteDeleteAsync(stoppingToken);
+
+        _logger.OutboxMessagesCleaned(options.MessageRetentionInDays);
     }
 }
 

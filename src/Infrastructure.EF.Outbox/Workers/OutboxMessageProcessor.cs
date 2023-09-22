@@ -1,9 +1,8 @@
-﻿using System.Linq;
-
-using MediatR;
+﻿using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -11,55 +10,55 @@ using Newtonsoft.Json;
 
 using Polly;
 
-using Quartz;
-
 using SolutionTemplate.Domain._.Events;
 using SolutionTemplate.Infrastructure.EF.Outbox.Entities;
 using SolutionTemplate.Infrastructure.EF.Outbox.Options;
 
 namespace SolutionTemplate.Infrastructure.EF.Outbox.Workers;
 
-[DisallowConcurrentExecution]
-internal sealed class OutboxMessageProcessor : IJob
+internal sealed class OutboxMessageProcessor : BackgroundService
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly IOptionsMonitor<OutboxOptions> _options;
     private readonly ILogger _logger;
+    private int _intervalInSeconds;
 
-    public OutboxMessageProcessor(IServiceProvider serviceProvider, IOptionsMonitor<OutboxOptions> options, ILogger<OutboxMessageProcessor> logger)
+    public OutboxMessageProcessor(IServiceProvider serviceProvider, IOptions<OutboxOptions> options, ILogger<OutboxMessageProcessor> logger)
     {
-        _serviceProvider = serviceProvider;
-        _options = options;
+        _serviceProvider = serviceProvider;     
         _logger = logger;
+
+        // We will reevaluate the options each run, but we need the interval te start with.
+        _intervalInSeconds = options.Value.MessageProcessorIntervalInSeconds;
     }
 
-    public async Task Execute(IJobExecutionContext context)
+
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            await RunTimedLoop(stoppingToken);
+        }
+    }
+
+    private async Task RunTimedLoop(CancellationToken stoppingToken)
     {
         try
         {
-            var options = _options.CurrentValue;
+            using PeriodicTimer timer = new(TimeSpan.FromSeconds(_intervalInSeconds));
 
-            using var scope = _serviceProvider.CreateScope();
-
-            var dbContext = scope.ServiceProvider.GetRequiredService<DbContext>();
-
-            var messages = await dbContext.Set<OutboxMessage>()
-                .Where(m => m.ProcessedDateUtc == null)
-                .OrderBy(m => m.OccurredOnUtc)
-                .Take(options.SimultaneousMessages)
-                .ToListAsync(context.CancellationToken);
-
-            if (!messages.Any())
+            while (await timer.WaitForNextTickAsync(stoppingToken))
             {
-                return;
-            }
+                var intervalInSeconds = await ProcessScopedRun(stoppingToken);
 
-            foreach (var message in messages)
-            {
-                await HandleMessage(message, context.CancellationToken);
-            }
+                if (_intervalInSeconds != intervalInSeconds)
+                {
+                    _intervalInSeconds = intervalInSeconds;
 
-            await dbContext.SaveChangesAsync(context.CancellationToken);
+                    // The options have changed, so we need to stop this job and let the host restart it.
+                    timer.Dispose();
+                    return;
+                }
+            }
         }
         catch (Exception e)
         {
@@ -68,6 +67,41 @@ internal sealed class OutboxMessageProcessor : IJob
             // When saving the message processing status fails, the record will be picked up in the next iteration.
             // If some handlers already processed the message, they will be skipped based on the OutboxMessageConsumer registration.
         }
+    }
+
+    private async Task<int> ProcessScopedRun(CancellationToken stoppingToken)
+    {
+        using var scope = _serviceProvider.CreateScope();
+
+        var optionsSnapshot = scope.ServiceProvider.GetRequiredService<IOptionsSnapshot<OutboxOptions>>();
+        var options = optionsSnapshot.Value;
+
+        await HandleMessages(scope, options, stoppingToken);
+
+        return options.MessageProcessorIntervalInSeconds;
+    }
+
+    private async Task HandleMessages(IServiceScope scope, OutboxOptions options, CancellationToken stoppingToken)
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<DbContext>();
+
+        var messages = await dbContext.Set<OutboxMessage>()
+            .Where(m => m.ProcessedDateUtc == null)
+            .OrderBy(m => m.OccurredOnUtc)
+            .Take(options.MessageProcessorSimultaneousMessages)
+            .ToListAsync(stoppingToken);
+
+        if (!messages.Any())
+        {
+            return;
+        }
+
+        foreach (var message in messages)
+        {
+            await HandleMessage(message, stoppingToken);
+        }
+
+        await dbContext.SaveChangesAsync(stoppingToken);
     }
 
     private async Task HandleMessage(OutboxMessage message, CancellationToken cancellationToken)

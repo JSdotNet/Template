@@ -1,10 +1,10 @@
 # Domain Events with Outbox Pattern
 
-In this project I abstracted my implementation for handling domain event with an outbox pattern, to a library that can be used in any project.
-This implementation is build on top of [Entity Framework](https://docs.microsoft.com/en-us/ef/), [MediatR](https://github.com/jbogard/MediatR), [Scrutor](https://github.com/khellang/Scrutor) and [Quartz](https://www.quartz-scheduler.net/).
+In this project I abstracted my implementation, for handling domain events with an outbox pattern, to a library that can be used in any project.
+This implementation is build on top of [Entity Framework](https://docs.microsoft.com/en-us/ef/), [MediatR](https://github.com/jbogard/MediatR) and [Scrutor](https://github.com/khellang/Scrutor). I made an earlier implementation using Quartz for background processes [Quartz](https://www.quartz-scheduler.net/), but wanted to reduce the dependencies. If you do use Quartz in your project I would suggest looking at that implementation.
 
-The library could potentially be made into a nuget package, but currently it still has some dependencies on my solution project.
-(I would probably need to extract some contract to make it fully independent)
+The library could potentially be made into a nuget package, but currently it still has some dependencies on my solution.
+(I would probably need to extract some contracts to make it fully independent)
 
 ## The implementation
 
