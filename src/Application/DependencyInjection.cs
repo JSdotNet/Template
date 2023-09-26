@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 
 using MediatR;
-using MediatR.NotificationPublishers;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,7 +12,7 @@ namespace SolutionTemplate.Application;
 
 public static class DependencyInjection
 {
-    public static void AddApplication(this IServiceCollection services, IConfiguration _)
+    public static void AddApplication<TPublisher>(this IServiceCollection services, IConfiguration _)
     {
         services.AddMediatR(configuration =>
         {
@@ -23,14 +22,9 @@ public static class DependencyInjection
             configuration.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ApplicationErrorPipelineBehavior<,>));
             configuration.AddBehavior(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkPipelineBehavior<,>));
 
-            configuration.NotificationPublisher = new TaskWhenAllPublisher();
+            configuration.NotificationPublisherType = typeof(TPublisher);
         });
 
         services.AddValidatorsFromAssembly(AssemblyReference.Assembly, includeInternalTypes: true);
-    }
-
-    public static IHealthChecksBuilder AddApplication(this IHealthChecksBuilder builder, IConfiguration _)
-    {
-        return builder;
     }
 }

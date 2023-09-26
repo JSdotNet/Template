@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-using SolutionTemplate.Domain.Models;
+﻿using SolutionTemplate.Domain.Models;
 using SolutionTemplate.Infrastructure.EF.Data;
 
 namespace SolutionTemplate.Integration.Tests.Helpers;
@@ -13,14 +11,11 @@ public static class TestData
 
 
 
-    public static async Task SeedTestData(string connectionString)
+    public static async Task SeedTestData(DataContext context)
     {
-        await using var context = new DataContext(new DbContextOptionsBuilder<DataContext>().UseSqlServer(connectionString).Options);
-        await context.Database.EnsureCreatedAsync();
-
-        context.Authors.Add(TestData.Author);
-        context.Articles.Add(TestData.ArticleSolutionTemplate);
-        context.Articles.Add(TestData.ArticleMediatR);
+        context.Authors.Add(Author);
+        context.Articles.Add(ArticleSolutionTemplate);
+        context.Articles.Add(ArticleMediatR);
 
         await context.SaveChangesAsync();
     }

@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Respawn;
 using Respawn.Graph;
 
+using SolutionTemplate.Infrastructure.EF.Data;
 using SolutionTemplate.Infrastructure.EF.Migrator;
 
 using Testcontainers.MsSql;
@@ -18,7 +19,7 @@ using Xunit;
 
 namespace SolutionTemplate.Integration.Tests.Helpers;
 
-public sealed class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
+public sealed class ApiTestApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     private readonly MsSqlContainer _dbContainer = new MsSqlBuilder().Build();
 
@@ -26,8 +27,8 @@ public sealed class CustomWebApplicationFactory : WebApplicationFactory<Program>
     private Respawner _respawner = default!;
 
     public HttpClient HttpClient { get; private set; } = default!;
-    public string ConnectionString => _dbContainer.GetConnectionString();
-
+    private string ConnectionString => _dbContainer.GetConnectionString();
+ 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         // Instead of using environment variables to bootstrap our application configuration, we can implement a custom WebApplicationFactory<TEntryPoint>
@@ -35,41 +36,50 @@ public sealed class CustomWebApplicationFactory : WebApplicationFactory<Program>
         Environment.SetEnvironmentVariable("ASPNETCORE_URLS", "https://+");
         Environment.SetEnvironmentVariable("ASPNETCORE_Kestrel__Certificates__Default__Path", "certificate.crt");
         Environment.SetEnvironmentVariable("ASPNETCORE_Kestrel__Certificates__Default__Password", "password");
+
         Environment.SetEnvironmentVariable("ConnectionStrings__Database", _dbContainer.GetConnectionString());
+        Environment.SetEnvironmentVariable("OutboxOptions__MessageProcessorIntervalInSeconds", "1");
+        Environment.SetEnvironmentVariable("OutboxOptions__MessageProcessorSimultaneousMessages", "10");
 
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll(typeof(DbContextOptions<DbContext>));
             services.RemoveAll(typeof(IDatabaseMigrator));
         });
+
     }
 
+    public async Task ResetStateAsync() 
+    {
+        await _respawner.ResetAsync(_dbConnection);
 
-    public Task ResetStateAsync() => _respawner.ResetAsync(_dbConnection);
+        await using var context = new DataContext(new DbContextOptionsBuilder<DataContext>().UseSqlServer(ConnectionString).Options);
+        await TestData.SeedTestData(context);
+    }
 
 
     public async Task InitializeAsync()
     {
+        // Start the database container
         await _dbContainer.StartAsync();
-        await TestData.SeedTestData(ConnectionString);
 
-        InitializeHttpClient();
+        // Ensure database is created and seeded
+        await using var context = new DataContext(new DbContextOptionsBuilder<DataContext>().UseSqlServer(ConnectionString).Options);
+        await context.Database.EnsureCreatedAsync();
 
-        await InitializeRespawner();
-    }
+        // Seed test data
+        await TestData.SeedTestData(context);
 
-    private void InitializeHttpClient()
-    {
-        _dbConnection = new SqlConnection(_dbContainer.GetConnectionString());
+        // Create HttpClient
         HttpClient = CreateClient(new WebApplicationFactoryClientOptions
         {
             AllowAutoRedirect = false
         });
-    }
 
-    private async Task InitializeRespawner()
-    {
+        // Setup respawner
+        _dbConnection = new SqlConnection(ConnectionString);
         await _dbConnection.OpenAsync();
+
         _respawner = await Respawner.CreateAsync(_dbConnection, new RespawnerOptions
         {
             DbAdapter = DbAdapter.SqlServer,
@@ -81,5 +91,7 @@ public sealed class CustomWebApplicationFactory : WebApplicationFactory<Program>
     {
         await _dbContainer.StopAsync();
         await _dbContainer.DisposeAsync();
+
+        await _dbConnection.DisposeAsync();
     }
 }

@@ -1,49 +1,58 @@
-﻿
-using MediatR;
+﻿using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-using SolutionTemplate.Application._.Messaging;
 using SolutionTemplate.Domain._.Events;
 using SolutionTemplate.Infrastructure.EF.Outbox.Entities;
 
-namespace SolutionTemplate.Infrastructure.EF.Outbox.Handler;
+namespace SolutionTemplate.Infrastructure.EF.Outbox.Publisher;
 
-
-public sealed class IdempotentDomainEventNotificationHandler<TDomainEvent> : IDomainEventNotificationHandler<TDomainEvent>
-    where TDomainEvent : IDomainEvent
+public sealed class OutBoxTaskWhenAllPublisher : INotificationPublisher
 {
-    private readonly INotificationHandler<TDomainEvent> _decorated;
     private readonly DbContext _dbContext;
-    private readonly ILogger<IdempotentDomainEventNotificationHandler<TDomainEvent>> _logger;
+    private readonly ILogger<OutBoxTaskWhenAllPublisher> _logger;
 
-    public IdempotentDomainEventNotificationHandler(INotificationHandler<TDomainEvent> decorated, DbContext dbContext, ILogger<IdempotentDomainEventNotificationHandler<TDomainEvent>> logger)
+    public OutBoxTaskWhenAllPublisher(DbContext dbContext, ILogger<OutBoxTaskWhenAllPublisher> logger)
     {
-        _decorated = decorated;
         _dbContext = dbContext;
         _logger = logger;
     }
 
-    public async Task Handle(TDomainEvent notification, CancellationToken cancellationToken)
+    public Task Publish(IEnumerable<NotificationHandlerExecutor> handlerExecutors, INotification notification, CancellationToken cancellationToken)
     {
-        var consumer = _decorated.GetType().Name;
+        var tasks = handlerExecutors
+            .Select(handler => HandlerHandlerCallback(notification, handler, cancellationToken))
+            .ToArray();
+
+        return Task.WhenAll(tasks);
+    }
+
+    private async Task HandlerHandlerCallback(INotification notification, NotificationHandlerExecutor handler, CancellationToken cancellationToken)
+    {
+        if (notification is not IDomainEvent domainEvent)
+        {
+            // We only handle domain events.
+            return;
+        }
+
+        var consumer = handler.HandlerInstance.GetType().Name;
 
         if (await _dbContext.Set<OutboxMessageConsumer>().AnyAsync(c =>
-                c.OutboxMessageId == notification.Id &&
+                c.OutboxMessageId == domainEvent.Id &&
                 c.Name == consumer, cancellationToken))
         {
             // Skip the message, it was already processed. 
             return;
         }
 
-        await _decorated.Handle(notification, cancellationToken);
+        await handler.HandlerCallback(domainEvent, cancellationToken);
 
         // Register that the message was processed, so we can skip it next time.
-        await RegisterDomainEventHandled(notification, consumer, cancellationToken);
+        await RegisterDomainEventHandled(domainEvent, consumer, cancellationToken);
     }
 
-    private async Task RegisterDomainEventHandled(TDomainEvent notification, string consumer, CancellationToken cancellationToken)
+    private async Task RegisterDomainEventHandled(IDomainEvent notification, string consumer, CancellationToken cancellationToken)
     {
         try
         {
@@ -66,6 +75,7 @@ public sealed class IdempotentDomainEventNotificationHandler<TDomainEvent> : IDo
         }
     }
 }
+
 
 public static partial class Log
 {

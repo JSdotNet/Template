@@ -20,8 +20,4 @@
     <ProjectReference Include="..\Infrastructure.EF\Infrastructure.EF.csproj" />
     <ProjectReference Include="..\Presentation\Presentation.Api.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <InternalsVisibleTo Include="Integration.Tests" />
-  </ItemGroup>
 </Project>

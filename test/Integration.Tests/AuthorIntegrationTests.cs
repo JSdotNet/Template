@@ -12,18 +12,18 @@ using Xunit;
 namespace SolutionTemplate.Integration.Tests;
 
 
-[CollectionDefinition("Author Collection", DisableParallelization = true)]
-public class AuthorTestCollectionFixture : ICollectionFixture<CustomWebApplicationFactory> { }
+[CollectionDefinition(nameof(AuthorIntegrationTests), DisableParallelization = true)]
+public class AuthorTestCollectionFixture : ICollectionFixture<ApiTestApplicationFactory> { }
 
 
-[Collection("Author Collection")]
+[Collection(nameof(AuthorIntegrationTests))]
 [TestCaseOrderer("SolutionTemplate.Integration.Tests.Helpers.PriorityOrderer", "Integration.Tests")]
 public sealed class AuthorIntegrationTests
 {
-    private readonly CustomWebApplicationFactory _factory;
+    private readonly ApiTestApplicationFactory _factory;
     private static Guid _id = Guid.Empty;
 
-    public AuthorIntegrationTests(CustomWebApplicationFactory factory)
+    public AuthorIntegrationTests(ApiTestApplicationFactory factory)
     {
         _factory = factory;
     }
@@ -36,10 +36,8 @@ public sealed class AuthorIntegrationTests
         var json = JsonConvert.SerializeObject(new CreateAuthor.Command("Email", "Firstname", "Lastname"));
         var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-
         // Act
         var response = await _factory.HttpClient.PostAsync("/author", stringContent);
-
 
         // Assert
         response.EnsureSuccessStatusCode();

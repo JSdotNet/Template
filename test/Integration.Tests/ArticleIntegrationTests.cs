@@ -15,20 +15,18 @@ using Xunit;
 namespace SolutionTemplate.Integration.Tests;
 
 
-[CollectionDefinition("Article Collection", DisableParallelization = true)]
-public class ArticleTestCollectionFixture : ICollectionFixture<CustomWebApplicationFactory> { }
+[CollectionDefinition(nameof(ArticleIntegrationTests), DisableParallelization = true)]
+public class ArticleTestCollectionFixture : ICollectionFixture<ApiTestApplicationFactory> { }
 
-[Collection("Article Collection")]
+[Collection(nameof(ArticleIntegrationTests))]
 public sealed class ArticleIntegrationTests : IAsyncLifetime
 {
     private readonly HttpClient _client;
     private readonly Func<Task> _resetDatabase;
-    private readonly string _connectionString;
-    public ArticleIntegrationTests(CustomWebApplicationFactory factory)
+    public ArticleIntegrationTests(ApiTestApplicationFactory factory)
     {
         _client = factory.HttpClient;
         _resetDatabase = factory.ResetStateAsync;
-        _connectionString = factory.ConnectionString;
     }
 
     [Fact]
@@ -105,12 +103,6 @@ public sealed class ArticleIntegrationTests : IAsyncLifetime
 
 
 
-
     public Task InitializeAsync() => Task.CompletedTask;
-
-    public async Task DisposeAsync()
-    {
-        await _resetDatabase();
-        await TestData.SeedTestData(_connectionString);
-    }
+    public Task DisposeAsync() => _resetDatabase();
 }

@@ -5,6 +5,8 @@ using Serilog;
 using SolutionTemplate.Application;
 using SolutionTemplate.Infrastructure.EF;
 using SolutionTemplate.Infrastructure.EF.Migrator;
+using SolutionTemplate.Infrastructure.EF.Outbox;
+using SolutionTemplate.Infrastructure.EF.Outbox.Publisher;
 using SolutionTemplate.Presentation.Api;
 
 
@@ -12,7 +14,6 @@ using SolutionTemplate.Presentation.Api;
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
-// TODO Review... 
 builder.Services.AddOptions();
 
 // Logging
@@ -27,13 +28,11 @@ builder.Host.UseSerilog((context, configuration) =>
 
 // Health
 builder.Services.AddHealthChecks()
-    .AddInfrastructureEf(config)
-    .AddApplication(config);
-
+    .AddInfrastructureEf(config);
 // TODO AspNetCore.HealthChecks.Publisher.ApplicationInsights =>.AddApplicationInsightsPublisher();
 
-
-builder.Services.AddApplication(config);
+builder.Services.AddInfrastructureEfOutbox();
+builder.Services.AddApplication<OutBoxTaskWhenAllPublisher>(config);
 builder.Services.AddInfrastructureEf(config);
 builder.Services.AddPresentation(config);
 

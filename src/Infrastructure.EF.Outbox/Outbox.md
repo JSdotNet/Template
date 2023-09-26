@@ -1,7 +1,7 @@
 # Domain Events with Outbox Pattern
 
 In this project I abstracted my implementation, for handling domain events with an outbox pattern, to a library that can be used in any project.
-This implementation is build on top of [Entity Framework](https://docs.microsoft.com/en-us/ef/), [MediatR](https://github.com/jbogard/MediatR) and [Scrutor](https://github.com/khellang/Scrutor). I made an earlier implementation using Quartz for background processes [Quartz](https://www.quartz-scheduler.net/), but wanted to reduce the dependencies. If you do use Quartz in your project I would suggest looking at that implementation.
+This implementation is build on top of [Entity Framework](https://docs.microsoft.com/en-us/ef/), [MediatR](https://github.com/jbogard/MediatR). I made an earlier implementation using Quartz for background processes [Quartz](https://www.quartz-scheduler.net/) and [Scrutor](https://github.com/khellang/Scrutor), but wanted to reduce the dependencies. If you do use Quartz or Scrutor in your project I would suggest looking at that implementation (it should still be available in "feature/OutBoxQuartz" branch).
 
 The library could potentially be made into a nuget package, but currently it still has some dependencies on my solution.
 (I would probably need to extract some contracts to make it fully independent)
@@ -63,8 +63,7 @@ This project contains 2 background services (/ Workers):
 - The [OutboxMessageProcessor](workers/OutboxMessageProcessor.cs) is responsible for processing the OutboxMessage records in the database.
 - The [OutboxMessageCleaner](workers/OutboxMessageCleaner.cs) is responsible for cleaning up the OutboxMessage records after a configurable retention period.
 
-The OutboxMessageProcessor uses Quartz to schedule the processing of the OutboxMessage records.
-It takes some unprocessed records, from the database and publishes them to MediatR. If an error occurs in a handler it is expected to throw an exception.
+The OutboxMessageProcessor take the next set of messages from the database and publishes them to MediatR. If an error occurs in a handler it is expected to throw an exception.
 After some retries with Polly the message is marked as failed and the error is logged.
 
 ``` 
@@ -73,15 +72,9 @@ One approach may be to register an expiration date for each event and set the Pr
 ```
 
 With MediatR multiple handlers can be configured for each domain event.
-Through Scrutor each of those handlers is decorated with the IdempotentDomainEventNotificationHandler.
-This stores a Consumer record in the database (for each handler) to ensure that the event is only handled once.
+By using a custom INotificationPublisher each of those handlers is tracked and registered as consumer.
+This is done by storing a Consumer record in the database (for each handler) to ensure that the event is only handled once.
 When processing an OutboxMessage partially it can safely be retried without the risk of running the same handler multiple times.
-
-```
-⚠️ I do not like Scrutor for this. It is now only used to make the Outbox pattern possible in the project. There may be a better way to intercept the handler...
-
-It may be possible to do this with a custom implementation for INotificationPublisher, supported starting form MediatR 12. I plan to try this at some point...
-```
 
 ## Resources
 
