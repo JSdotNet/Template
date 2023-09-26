@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 using SolutionTemplate.Domain;
 using SolutionTemplate.Domain.Models;

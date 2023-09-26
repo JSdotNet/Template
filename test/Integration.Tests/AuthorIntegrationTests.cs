@@ -1,13 +1,10 @@
 ﻿using System.Text;
 
-using FluentAssertions;
-
 using Newtonsoft.Json;
 
 using SolutionTemplate.Application.Authors.Commands;
 using SolutionTemplate.Application.Authors.Queries;
 using SolutionTemplate.Integration.Tests.Helpers;
-using Xunit;
 
 namespace SolutionTemplate.Integration.Tests;
 

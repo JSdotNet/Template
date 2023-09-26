@@ -6,8 +6,6 @@ using NetArchTest.Rules;
 using SolutionTemplate.Architecture.Tests.Extensions;
 using SolutionTemplate.Domain._;
 
-using Xunit;
-
 namespace SolutionTemplate.Architecture.Tests.Rules;
 
 public abstract class DomainRules

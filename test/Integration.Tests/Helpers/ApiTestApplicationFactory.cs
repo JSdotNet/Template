@@ -15,8 +15,6 @@ using SolutionTemplate.Infrastructure.EF.Migrator;
 
 using Testcontainers.MsSql;
 
-using Xunit;
-
 namespace SolutionTemplate.Integration.Tests.Helpers;
 
 public sealed class ApiTestApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime

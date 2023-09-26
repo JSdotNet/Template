@@ -1,8 +1,6 @@
 ﻿using SolutionTemplate.Domain._;
 using SolutionTemplate.Domain.Models;
 
-using Xunit;
-
 namespace SolutionTemplate.Domain.Tests;
 
 public class ArticleTests

@@ -2,8 +2,6 @@
 
 using SolutionTemplate.Application.Articles.Commands;
 
-using Xunit;
-
 namespace SolutionTemplate.Application.Tests.Articles.Commands;
 
 public class UpdateArticleValidatorTests

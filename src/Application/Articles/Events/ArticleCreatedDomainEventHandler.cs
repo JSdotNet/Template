@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-
-using SolutionTemplate.Application._.Messaging;
+﻿using SolutionTemplate.Application._.Messaging;
 using SolutionTemplate.Domain;
 
 

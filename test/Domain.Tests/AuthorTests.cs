@@ -1,7 +1,5 @@
 ﻿
 using SolutionTemplate.Domain.Models;
-using Xunit;
-using FluentAssertions;
 
 namespace SolutionTemplate.Domain.Tests;
 

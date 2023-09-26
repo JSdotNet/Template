@@ -21,8 +21,6 @@ using SolutionTemplate.Infrastructure.EF.Outbox.Workers;
 
 using Testcontainers.MsSql;
 
-using Xunit;
-
 namespace SolutionTemplate.Integration.Tests.Helpers;
 
 public sealed class IntegrationTestApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime

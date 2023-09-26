@@ -2,8 +2,6 @@
 
 using SolutionTemplate.Application.Authors.Commands;
 
-using Xunit;
-
 namespace SolutionTemplate.Application.Tests.Authors.Commands;
 
 public class DeleteAuthorValidatorTests

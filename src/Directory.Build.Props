@@ -12,4 +12,8 @@
   <ItemGroup>
     <InternalsVisibleTo Include="Integration.Tests" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Microsoft.Extensions.Logging" />
+  </ItemGroup>
 </Project>

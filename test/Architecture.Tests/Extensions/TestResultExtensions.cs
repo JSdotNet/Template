@@ -1,7 +1,5 @@
 ﻿using NetArchTest.Rules;
 
-using Xunit;
-
 namespace SolutionTemplate.Architecture.Tests.Extensions;
 
 internal static class TestResultExtensions

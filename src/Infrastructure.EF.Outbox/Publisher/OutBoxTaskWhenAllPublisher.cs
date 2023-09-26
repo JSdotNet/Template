@@ -1,7 +1,6 @@
 ﻿using MediatR;
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 using SolutionTemplate.Domain._.Events;
 using SolutionTemplate.Infrastructure.EF.Outbox.Entities;

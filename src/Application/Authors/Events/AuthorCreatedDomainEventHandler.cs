@@ -1,7 +1,5 @@
 ﻿using MediatR;
 
-using Microsoft.Extensions.Logging;
-
 using SolutionTemplate.Domain;
 
 namespace SolutionTemplate.Application.Authors.Events;

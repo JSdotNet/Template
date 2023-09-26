@@ -1,8 +1,4 @@
-﻿
-using Xunit.Abstractions;
-using Xunit.Sdk;
-
-namespace SolutionTemplate.Integration.Tests.Helpers;
+﻿namespace SolutionTemplate.Integration.Tests.Helpers;
 public class PriorityOrderer : ITestCaseOrderer
 {
     public IEnumerable<TTestCase> OrderTestCases<TTestCase>(

@@ -2,13 +2,7 @@
 
 using SolutionTemplate.Application.Authors.Commands;
 
-using FluentAssertions;
-using Xunit;
-
 using Microsoft.Extensions.DependencyInjection;
-
-using AutoFixture;
-
 using Microsoft.EntityFrameworkCore;
 
 using SolutionTemplate.Domain;
@@ -18,8 +12,6 @@ using SolutionTemplate.Infrastructure.EF.Outbox.Entities;
 using MediatR;
 
 using SolutionTemplate.Integration.Tests.Helpers;
-
-using Xunit.Abstractions;
 
 
 namespace SolutionTemplate.Integration.Tests;

@@ -1,14 +1,6 @@
-﻿using AutoFixture;
-
-using FluentAssertions;
-
-using Moq;
-
-using SolutionTemplate.Application.Articles.Commands;
+﻿using SolutionTemplate.Application.Articles.Commands;
 using SolutionTemplate.Domain.Models;
 using SolutionTemplate.Domain.Repository;
-
-using Xunit;
 
 namespace SolutionTemplate.Application.Tests.Articles.Commands;
 
