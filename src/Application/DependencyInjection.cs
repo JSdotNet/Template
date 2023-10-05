@@ -18,6 +18,7 @@ public static class DependencyInjection
         {
             configuration.RegisterServicesFromAssembly(AssemblyReference.Assembly);
 
+            configuration.AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingPipelineBehavior<,>));
             configuration.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
             configuration.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ApplicationErrorPipelineBehavior<,>));
             configuration.AddBehavior(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkPipelineBehavior<,>));

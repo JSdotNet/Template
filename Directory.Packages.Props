@@ -6,6 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- Included in all projects (except Domain) -->
+    <PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="7.0.11" />
@@ -26,10 +27,8 @@
     <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="7.1.0" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="7.0.11" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageVersion Include="Serilog.AspNetCore" Version="7.0.0" />
     
     <!-- Launcher project -->
-    <PackageVersion Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
     
     <!-- Infrastructure.EF project -->
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="7.0.11" />
@@ -43,20 +42,7 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
     <PackageVersion Include="Polly" Version="7.2.4" />
 
-    <!-- TODO Review...  
-    <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
-    <PackageVersion Include="Quartz.Extensions.DependencyInjection" Version="3.7.0" />
-              
-        
-    <PackageVersion Include="Microsoft.Extensions.Options" Version="7.0.1" />
-    <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="7.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
-        
-    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
-        
+    <!-- TODO Review...     
     <PackageVersion Include="Refit.HttpClientFactory" Version="7.0.0" />
     -->
   </ItemGroup>
@@ -95,6 +81,7 @@
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.0" />-->
   </ItemGroup>
+  
   <!-- Test analyzers-->
   <ItemGroup>
     <PackageVersion Include="xunit.analyzers" Version="1.3.0" />

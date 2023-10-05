@@ -15,7 +15,7 @@ internal sealed class AuthorCreatedDomainEventHandler : INotificationHandler<Dom
     {
         // This is only a sample. Normally you would do something useful here, like send an Email or ...
 #pragma warning disable CA1848
-        _logger.LogInformation("Author Created: {ArticleId}", notification.AuthorId);
+        _logger.LogInformation("Author Created: {AuthorId}", notification.AuthorId);
 #pragma warning restore CA1848
 
         return Task.CompletedTask;

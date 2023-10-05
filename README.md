@@ -59,14 +59,13 @@ The last 2 are optional, but since most project I work on are Web API's with a d
 
 ### Logging
 
-In this project I used SeriLog to setup logging. No specific reason, just that I had a sample available that I could use.
+My main requirement for logging is that it should log to Application Insights, with the possibility to log to the console and the [Application Insight Search](https://learn.microsoft.com/en-us/azure/azure-monitor/app/diagnostic-search) window during development.
+
+In this project I use the default Microsoft configuration without depending on third party packages. I tried a [SeriLog approach](https://youtu.be/nVAkSBpsuTk?si=Qq2b_ifOAp6wt_Rj) in a earlier version, but I don't really see the benefits to what is offered in the natively.
 I intent to compare this to other other approaches at a later stage.
 
-My main requirement for logging is that it should log to Application Insights, with the possibility to log to the console during development.
-
-```
-⚠️ TODO: When I add deployment to Azure, I also intent to look setting up Web App console logging.
-```
+I Added a sample [LoggingPipelineBehavior](src/Application/_/Behaviors/LoggingPipelineBehavior.cs) to test adding properties to alle messages within a scope.
+This could also be done with Middleware in a API project, but putting this responsibility in the Application layer, makes it usable in scenario's where ASP.Net would not be used.
 
 ### Health checks
 
@@ -269,7 +268,7 @@ Thats why I will not focus on these projects, except for specific concerns:
 
 ## Unit testing
 
-Testing should not be the last thing you do, but it is last in the readme...
+Testing should not be the last thing you do, but it is last in this readme...
 
 First of all, I think it is important to have good unit tests for the Domain project. It's the foundation of the application, so it should be tested well.
 I do not like steering on Code coverage, but I do think it is important to have high test coverage for the Domain project (I would aim for at least 90% only from the Domain.Tests).
@@ -285,8 +284,8 @@ As they are setup in this template they can run in parallel using multiple docke
 
 While building this template I was inspired by the following resources:
 
-- (Clean Architecture With .NET 6 And CQRS - Project Setup)[https://www.youtube.com/watch?v=tLk4pZZtiDY&list=PLYpjLpq5ZDGstQ5afRz-34o_0dexr1RGa&index=1&t=219s]
-- (Clean Architecture Project Setup From Scratch With .NET 7)[https://www.youtube.com/watch?v=fe4iuaoxGbA&list=PLYpjLpq5ZDGstQ5afRz-34o_0dexr1RGa&index=32]
-- (Clean Architecture With .NET 6 And CQRS - Project Setup)[https://www.youtube.com/watch?v=B9ZUJN1Juhk]
-- (Tame Your Domain Using THIS Powerful Tool!)[https://www.youtube.com/watch?v=LbdPuo4zEHE]
-- (Mastering DDD Aggregate Modeling With THESE 3 Steps)[https://youtu.be/E2ctgrKhqBw]
+- [Clean Architecture With .NET 6 And CQRS - Project Setup](https://www.youtube.com/watch?v=tLk4pZZtiDY&list=PLYpjLpq5ZDGstQ5afRz-34o_0dexr1RGa&index=1&t=219s)
+- [Clean Architecture Project Setup From Scratch With .NET 7](https://www.youtube.com/watch?v=fe4iuaoxGbA&list=PLYpjLpq5ZDGstQ5afRz-34o_0dexr1RGa&index=32)
+- [Clean Architecture With .NET 6 And CQRS - Project Setup](https://www.youtube.com/watch?v=B9ZUJN1Juhk)
+- [Tame Your Domain Using THIS Powerful Tool!](https://www.youtube.com/watch?v=LbdPuo4zEHE)
+- [Mastering DDD Aggregate Modeling With THESE 3 Steps](https://youtu.be/E2ctgrKhqBw)

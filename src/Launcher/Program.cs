@@ -1,7 +1,3 @@
-using System.Globalization;
-
-using Serilog;
-
 using SolutionTemplate.Application;
 using SolutionTemplate.Infrastructure.EF;
 using SolutionTemplate.Infrastructure.EF.Migrator;
@@ -16,15 +12,17 @@ var config = builder.Configuration;
 
 builder.Services.AddOptions();
 
-// Logging
-// TODO Try with Pure .net https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-7.0
-builder.Host.UseSerilog((context, configuration) =>
+// Application Insight
+// https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-7.0
+builder.Services.AddLogging(loggingBuilder =>
 {
-    configuration
-        .ReadFrom.Configuration(context.Configuration)
-        .Enrich.FromLogContext()
-        .WriteTo.Console(formatProvider: CultureInfo.CurrentCulture);
+    loggingBuilder.AddConfiguration(config.GetSection("Logging"));
+    
+    loggingBuilder.AddConsole();
+    loggingBuilder.AddDebug();
+    loggingBuilder.AddApplicationInsights();
 });
+builder.Services.AddApplicationInsightsTelemetry();
 
 // Health
 builder.Services.AddHealthChecks()
@@ -35,6 +33,8 @@ builder.Services.AddInfrastructureEfOutbox();
 builder.Services.AddApplication<OutBoxTaskWhenAllPublisher>(config);
 builder.Services.AddInfrastructureEf(config);
 builder.Services.AddPresentation(config);
+
+
 
 
 var app = builder.Build();
