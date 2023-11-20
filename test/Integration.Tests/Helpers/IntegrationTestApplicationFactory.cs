@@ -2,6 +2,8 @@
 
 using MediatR;
 
+using Meziantou.Extensions.Logging.Xunit;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -9,6 +11,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 
 using Respawn;
 using Respawn.Graph;
@@ -29,6 +32,12 @@ public sealed class IntegrationTestApplicationFactory : WebApplicationFactory<Pr
 
     private DbConnection _dbConnection = default!;
     private Respawner _respawner = default!;
+
+    private readonly ITestOutputHelper _outputHelper;
+    public IntegrationTestApplicationFactory(ITestOutputHelper outputHelper)
+    {
+        _outputHelper = outputHelper;
+    }
 
     private string ConnectionString => _dbContainer.GetConnectionString();
 
@@ -55,6 +64,12 @@ public sealed class IntegrationTestApplicationFactory : WebApplicationFactory<Pr
             services.AddTransient<INotificationHandler<DomainEvents.AuthorCreated>, OutboxEventHandler<DomainEvents.AuthorCreated>>();
             services.AddTransient<INotificationHandler<DomainEvents.ArticleCreated>, OutboxEventHandler<DomainEvents.ArticleCreated>>();
             services.AddSingleton<IDomainEventLogger, DomainEventLogger>();
+        });
+
+        builder.ConfigureLogging(x => 
+        { 
+            x.ClearProviders();
+            x.Services.AddSingleton<ILoggerProvider>(new XUnitLoggerProvider(_outputHelper));
         });
     }
 

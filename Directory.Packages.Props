@@ -78,6 +78,7 @@
     <PackageVersion Include="Respawn" Version="6.1.0" />
     <PackageVersion Include="Testcontainers" Version="3.5.0" />
     <PackageVersion Include="Testcontainers.MsSql" Version="3.5.0" />
+    <PackageVersion Include="Meziantou.Extensions.Logging.Xunit" Version="1.0.6" />
     
     <!-- TODO Review (do I want to use these?)
     <PackageVersion Include="Bogus" Version="34.0.2" />

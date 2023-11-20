@@ -1,5 +1,12 @@
 ﻿using System.Text;
 
+using Meziantou.Extensions.Logging.Xunit;
+
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
 using Newtonsoft.Json;
 
 using SolutionTemplate.Application._;
@@ -11,18 +18,35 @@ using SolutionTemplate.Integration.Tests.Helpers;
 namespace SolutionTemplate.Integration.Tests;
 
 
-[CollectionDefinition(nameof(ArticleIntegrationTests), DisableParallelization = true)]
-public class ArticleTestCollectionFixture : ICollectionFixture<ApiTestApplicationFactory> { }
+//[CollectionDefinition(nameof(ArticleIntegrationTests), DisableParallelization = true)]
+//public class ArticleTestCollectionFixture : ICollectionFixture<ApiTestApplicationFactory> { }
 
-[Collection(nameof(ArticleIntegrationTests))]
-public sealed class ArticleIntegrationTests : IAsyncLifetime
+//[Collection(nameof(ArticleIntegrationTests))]
+public sealed class ArticleIntegrationTests : IAsyncLifetime, IAsyncDisposable
 {
-    private readonly HttpClient _client;
-    private readonly Func<Task> _resetDatabase;
-    public ArticleIntegrationTests(ApiTestApplicationFactory factory)
+    //private readonly ITestOutputHelper _testOutputHelper;
+    private readonly ApiTestApplicationFactory _factory;
+    //private readonly HttpClient _client;
+    //private readonly Func<Task> _resetDatabase;
+    public ArticleIntegrationTests(ITestOutputHelper testOutputHelper)
     {
-        _client = factory.HttpClient;
-        _resetDatabase = factory.ResetStateAsync;
+        //_testOutputHelper = testOutputHelper;
+        _factory = new ApiTestApplicationFactory(testOutputHelper);
+
+        
+        //var waf = new ApiTestApplicationFactory()
+        //    .WithWebHostBuilder(builder => 
+        //    {
+        //        builder.ConfigureLogging(x =>
+        //        {
+        //            x.ClearProviders();
+        //            x.Services.AddSingleton<ILoggerProvider>(new XUnitLoggerProvider(_testOutputHelper));
+        //        });
+        //    })
+        //    .WithWebHostBuilder;
+
+        //_client = factory.HttpClient;
+        //_resetDatabase = factory.ResetStateAsync;
     }
 
     [Fact]
@@ -33,7 +57,7 @@ public sealed class ArticleIntegrationTests : IAsyncLifetime
         var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
         // Act
-        var response = await _client.PostAsync("/article/", stringContent);
+        var response = await _factory.HttpClient.PostAsync("/article/", stringContent);
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -47,7 +71,7 @@ public sealed class ArticleIntegrationTests : IAsyncLifetime
     public async Task GetArticle()
     {
         // Act
-        var response = await _client.GetAsync($"/article/{TestData.ArticleSolutionTemplate.Id}");
+        var response = await _factory.HttpClient.GetAsync($"/article/{TestData.ArticleSolutionTemplate.Id}");
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -65,7 +89,7 @@ public sealed class ArticleIntegrationTests : IAsyncLifetime
         var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
         // Act
-        var response = await _client.PutAsync("/article/", stringContent);
+        var response = await _factory.HttpClient.PutAsync("/article/", stringContent);
 
 
         // Assert
@@ -76,7 +100,7 @@ public sealed class ArticleIntegrationTests : IAsyncLifetime
     public async Task GetArticles()
     {
         // Act
-        var response = await _client.GetAsync("/article");
+        var response = await _factory.HttpClient.GetAsync("/article");
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -91,7 +115,7 @@ public sealed class ArticleIntegrationTests : IAsyncLifetime
     public async Task DeleteArticle()
     {
         // Act
-        var response = await _client.DeleteAsync($"/article/{TestData.ArticleSolutionTemplate.Id}");
+        var response = await _factory.HttpClient.DeleteAsync($"/article/{TestData.ArticleSolutionTemplate.Id}");
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -99,6 +123,16 @@ public sealed class ArticleIntegrationTests : IAsyncLifetime
 
 
 
-    public Task InitializeAsync() => Task.CompletedTask;
-    public Task DisposeAsync() => _resetDatabase();
+    public Task InitializeAsync() => _factory.InitializeAsync();
+    public Task DisposeAsync()
+    {
+
+        return _factory.DisposeAsync();
+        //_factory.ResetStateAsync();
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        await _factory.DisposeAsync();
+    }
 }

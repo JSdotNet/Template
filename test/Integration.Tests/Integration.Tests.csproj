@@ -7,6 +7,8 @@
     <PackageReference Include="Respawn" />
     <PackageReference Include="Testcontainers" />
     <PackageReference Include="Testcontainers.MsSql" />
+    <PackageReference Include=" Meziantou.Extensions.Logging.Xunit" />
+   
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Launcher\Launcher.csproj" />

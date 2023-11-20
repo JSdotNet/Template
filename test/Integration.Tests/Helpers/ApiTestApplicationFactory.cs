@@ -1,11 +1,15 @@
 ﻿using System.Data.Common;
 
+using Meziantou.Extensions.Logging.Xunit;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 
 using Respawn;
 using Respawn.Graph;
@@ -23,6 +27,12 @@ public sealed class ApiTestApplicationFactory : WebApplicationFactory<Program>, 
 
     private DbConnection _dbConnection = default!;
     private Respawner _respawner = default!;
+
+    private readonly ITestOutputHelper _outputHelper;
+    public ApiTestApplicationFactory(ITestOutputHelper outputHelper)
+    {
+        _outputHelper = outputHelper;
+    }
 
     public HttpClient HttpClient { get; private set; } = default!;
     private string ConnectionString => _dbContainer.GetConnectionString();
@@ -45,6 +55,12 @@ public sealed class ApiTestApplicationFactory : WebApplicationFactory<Program>, 
             services.RemoveAll(typeof(IDatabaseMigrator));
         });
 
+
+        builder.ConfigureLogging(x =>
+        {
+            x.ClearProviders();
+            x.Services.AddSingleton<ILoggerProvider>(new XUnitLoggerProvider(_outputHelper));
+        });
     }
 
     public async Task ResetStateAsync() 
