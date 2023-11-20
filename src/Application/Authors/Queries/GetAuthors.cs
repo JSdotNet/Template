@@ -11,18 +11,11 @@ public static class GetAuthors
 {
     public sealed record Query : IQuery<IList<Response>>;
 
-    internal sealed class Handler : IQueryHandler<Query, IList<Response>>
+    internal sealed class Handler(IReadOnlyDataContext dataContext) : IQueryHandler<Query, IList<Response>>
     {
-        private readonly IReadOnlyDataContext _dataContext;
-
-        public Handler(IReadOnlyDataContext dataContext)
-        {
-            _dataContext = dataContext;
-        }
-
         public async Task<Result<IList<Response>>> Handle(Query request, CancellationToken cancellationToken)
         {
-            var query = _dataContext.Query<Author>();
+            var query = dataContext.Query<Author>();
 
             var result = await query.ToListAsync(cancellationToken);
             

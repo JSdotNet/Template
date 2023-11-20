@@ -15,15 +15,9 @@ public class AuthorTestCollectionFixture : ICollectionFixture<ApiTestApplication
 
 [Collection(nameof(AuthorIntegrationTests))]
 [TestCaseOrderer("SolutionTemplate.Integration.Tests.Helpers.PriorityOrderer", "Integration.Tests")]
-public sealed class AuthorIntegrationTests
+public sealed class AuthorIntegrationTests(ApiTestApplicationFactory factory)
 {
-    private readonly ApiTestApplicationFactory _factory;
     private static Guid _id = Guid.Empty;
-
-    public AuthorIntegrationTests(ApiTestApplicationFactory factory)
-    {
-        _factory = factory;
-    }
 
 
     [Fact, TestPriority(1)]
@@ -34,7 +28,7 @@ public sealed class AuthorIntegrationTests
         var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
         // Act
-        var response = await _factory.HttpClient.PostAsync("/author", stringContent);
+        var response = await factory.HttpClient.PostAsync("/author", stringContent);
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -47,7 +41,7 @@ public sealed class AuthorIntegrationTests
     public async Task O2_GetAuthor()
     {
         // Act
-        var response = await _factory.HttpClient.GetAsync($"/author/{_id}");
+        var response = await factory.HttpClient.GetAsync($"/author/{_id}");
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -65,7 +59,7 @@ public sealed class AuthorIntegrationTests
         var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
         // Act
-        var response = await _factory.HttpClient.PutAsync("/author/", stringContent);
+        var response = await factory.HttpClient.PutAsync("/author/", stringContent);
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -75,7 +69,7 @@ public sealed class AuthorIntegrationTests
     public async Task O4_GetAuthors()
     {
         // Act
-        var response = await _factory.HttpClient.GetAsync("/author");
+        var response = await factory.HttpClient.GetAsync("/author");
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -90,7 +84,7 @@ public sealed class AuthorIntegrationTests
     public async Task O5_DeleteAuthor()
     {
         // Act
-        var response = await _factory.HttpClient.DeleteAsync($"/author/{_id}");
+        var response = await factory.HttpClient.DeleteAsync($"/author/{_id}");
 
         // Assert
         response.EnsureSuccessStatusCode();

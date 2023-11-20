@@ -13,18 +13,11 @@ public static class GetArticles
 {
     public sealed record Query(string[]? Tags = null, string? SortColumn = null, string? SortOrder = null, int Page = 1, int PageSize = 5) : IQuery<PagedList<Response>>;
 
-    internal sealed class Handler : IQueryHandler<Query, PagedList<Response>>
+    internal sealed class Handler(IReadOnlyDataContext dataContext) : IQueryHandler<Query, PagedList<Response>>
     {
-        private readonly IReadOnlyDataContext _dataContext;
-
-        public Handler(IReadOnlyDataContext dataContext)
-        {
-            _dataContext = dataContext;
-        }
-
         public async Task<Result<PagedList<Response>>> Handle(Query request, CancellationToken cancellationToken)
         {
-            var query = _dataContext.Query<Article>();
+            var query = dataContext.Query<Article>();
 
 
             if (request.Tags is { Length: > 0 })

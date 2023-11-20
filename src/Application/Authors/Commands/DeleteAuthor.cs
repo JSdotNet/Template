@@ -19,21 +19,15 @@ public static class DeleteAuthor
         }
     }
 
-    internal sealed class Handler : ICommandHandler<Command>
+    internal sealed class Handler(IAuthorRepository authorRepository) : ICommandHandler<Command>
     {
-        private readonly IAuthorRepository _authorRepository;
-
-        public Handler(IAuthorRepository authorRepository)
-        {
-            _authorRepository = authorRepository;
-        }
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
-            var article = await _authorRepository.GetByIdAsync(request.Id, cancellationToken);
+            var article = await authorRepository.GetByIdAsync(request.Id, cancellationToken);
             if (article is null)
                 return Result.Failure(ApplicationErrors.NotFound<Author>(request.Id)); // TODO Use AuthorId here
 
-            _authorRepository.Remove(article);
+            authorRepository.Remove(article);
 
             return Result.Success();
             // Since the repository does not return anything, I create a new Result.

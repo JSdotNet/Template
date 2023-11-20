@@ -8,7 +8,7 @@
   <!-- Set the .Net framework, language version and project rules -->
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>12.0</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <!--
@@ -19,7 +19,7 @@
 
   <!-- Set analyzer rules -->
   <PropertyGroup>
-    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisLevel>8.0</AnalysisLevel>
     <AnalysisMode>Recommended</AnalysisMode>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>

@@ -7,10 +7,8 @@ using SolutionTemplate.Infrastructure.EF.Data;
 
 namespace SolutionTemplate.Infrastructure.EF.Repository;
 
-
-internal sealed class AuthorRepository : RepositoryBase<Author>, IAuthorRepository
+internal sealed class AuthorRepository(DataContext dataContext) : RepositoryBase<Author>(dataContext), IAuthorRepository
 {
-    public AuthorRepository(DataContext dataContext) : base(dataContext) {}
     public Task<Author?> FindByEmail(string email)
     {
         return DataContext.Authors.FirstOrDefaultAsync(a => a.Email == email);

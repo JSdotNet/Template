@@ -7,17 +7,10 @@ using SolutionTemplate.Domain._;
 
 namespace SolutionTemplate.Application._.Behaviors;
 
-internal sealed class UnitOfWorkPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+internal sealed class UnitOfWorkPipelineBehavior<TRequest, TResponse>(IUnitOfWork unitOfWork) : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
     where TResponse : Result
 {
-    private readonly IUnitOfWork _unitOfWork;
-
-    public UnitOfWorkPipelineBehavior(IUnitOfWork unitOfWork)
-    {
-        _unitOfWork = unitOfWork;
-    }
-
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         // This behavior should only be applied to commands
@@ -30,7 +23,7 @@ internal sealed class UnitOfWorkPipelineBehavior<TRequest, TResponse> : IPipelin
 
         var response = await next();
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         //transaction.Complete();
 

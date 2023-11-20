@@ -15,15 +15,10 @@ namespace SolutionTemplate.Integration.Tests;
 public class ArticleTestCollectionFixture : ICollectionFixture<ApiTestApplicationFactory> { }
 
 [Collection(nameof(ArticleIntegrationTests))]
-public sealed class ArticleIntegrationTests : IAsyncLifetime
+public sealed class ArticleIntegrationTests(ApiTestApplicationFactory factory) : IAsyncLifetime
 {
-    private readonly HttpClient _client;
-    private readonly Func<Task> _resetDatabase;
-    public ArticleIntegrationTests(ApiTestApplicationFactory factory)
-    {
-        _client = factory.HttpClient;
-        _resetDatabase = factory.ResetStateAsync;
-    }
+    private readonly HttpClient _client = factory.HttpClient;
+    private readonly Func<Task> _resetDatabase = factory.ResetStateAsync;
 
     [Fact]
     public async Task CreateArticle()

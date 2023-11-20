@@ -21,21 +21,13 @@ public static class UpdateArticle
         }
     }
 
-    internal sealed class Handler : ICommandHandler<Command>
+    internal sealed class Handler(IArticleRepository articleRepository) : ICommandHandler<Command>
     {
-        private readonly IArticleRepository _articleRepository;
-
-        public Handler(IArticleRepository articleRepository)
-        {
-            _articleRepository = articleRepository;
-        }
-
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
-            var article = await _articleRepository.GetByIdAsync(request.Id, cancellationToken);
+            var article = await articleRepository.GetByIdAsync(request.Id, cancellationToken);
             if (article is null)
                 return Result.Failure(ApplicationErrors.NotFound<Article>(request.Id));
-
 
             return article.Update(request.Title, request.Content);
             // Here I chose not to return the article or Id, that means I can just forward the result from the domain model.

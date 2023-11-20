@@ -5,12 +5,10 @@ using SolutionTemplate.Domain.Models;
 
 namespace SolutionTemplate.Infrastructure.EF.Data;
 
-public sealed class DataContext : DbContext, IUnitOfWork
+public sealed class DataContext(DbContextOptions<DataContext> options) : DbContext(options), IUnitOfWork
 {
     public DbSet<Article> Articles => Set<Article>();
     public DbSet<Author> Authors => Set<Author>();
-
-    public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

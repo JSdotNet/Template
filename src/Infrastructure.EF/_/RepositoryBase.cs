@@ -33,7 +33,7 @@ internal abstract class RepositoryBase<TAggregate>
         return result;
     }
 
-    public IAsyncEnumerable<TAggregate> AsAsyncEnumerable(CancellationToken cancellationToken = default) => _dbSet.AsAsyncEnumerable();
+    public IAsyncEnumerable<TAggregate> AsAsyncEnumerable() => _dbSet.AsAsyncEnumerable();
 
     public void Add(TAggregate entity)
     {

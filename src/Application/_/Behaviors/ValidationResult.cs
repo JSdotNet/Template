@@ -4,7 +4,7 @@ namespace SolutionTemplate.Application._.Behaviors;
 
 public interface IValidationResult
 {
-    public static Error ValidationError => new("ValidationError", "A validation problem occured");
+    public static Error ValidationError => new("ValidationError", "A validation problem occurred");
 
     Error[] Errors { get; }
 }
@@ -12,7 +12,7 @@ public interface IValidationResult
 
 public record ValidationResult : Result, IValidationResult
 {
-    public ValidationResult(Error[] errors) : base(false, IValidationResult.ValidationError)
+    private ValidationResult(Error[] errors) : base(false, IValidationResult.ValidationError)
     {
         Errors = errors;
     }

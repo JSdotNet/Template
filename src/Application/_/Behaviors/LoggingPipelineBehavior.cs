@@ -4,30 +4,22 @@ using SolutionTemplate.Domain._;
 
 namespace SolutionTemplate.Application._.Behaviors;
  
-internal sealed class LoggingPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+internal sealed class LoggingPipelineBehavior<TRequest, TResponse>(ILogger<LoggingPipelineBehavior<TRequest, TResponse>> logger) : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
     where TResponse : Result
-{
-    private readonly ILogger<LoggingPipelineBehavior<TRequest, TResponse>> _logger;
-
-    public LoggingPipelineBehavior(ILogger<LoggingPipelineBehavior<TRequest, TResponse>> logger)
-    {
-        _logger = logger;
-    }
-
-
+{   
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
 #pragma warning disable CA1848 // TODO How do I solve this for BeginScope?
-        using (_logger.BeginScope("{Request}, {User}", request, "Job"))
+        using (logger.BeginScope("{Request}, {User}", request, "Job"))
 #pragma warning restore CA1848
         { 
             var response = await next();
 
             if (response.IsFailure)
-                _logger.Error(response.Error!);
+                logger.Error(response.Error!);
             else
-                _logger.LogResponse(response);
+                logger.LogResponse(response);
 
             return response;
         }

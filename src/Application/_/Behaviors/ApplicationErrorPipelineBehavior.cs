@@ -31,23 +31,13 @@ internal sealed class ApplicationErrorPipelineBehavior<TRequest, TResponse> : IP
 
 }
 
-public sealed class ApplicationException : Exception
+public sealed class ApplicationException(ApplicationErrors.Code code, string message) : Exception(message)
 {
-    public ApplicationErrors.Code Code { get; }
-
-    public ApplicationException(ApplicationErrors.Code code, string message) : base(message)
-    {
-        Code = code;
-    }
+    public ApplicationErrors.Code Code { get; } = code;
 }
 
 
-public sealed class DomainException : Exception
+public sealed class DomainException(Error error) : Exception(error.Message)
 {
-    public string Code { get; }
-
-    public DomainException(Error error) : base(error.Message)
-    {
-        Code = error.Code;
-    }
+    public string Code { get; } = error.Code;
 }

@@ -16,10 +16,7 @@ public class PriorityOrderer : ITestCaseOrderer
             GetOrCreate(sortedMethods, priority).Add(testCase);
         }
 
-        foreach (var testCase in
-                 sortedMethods.Keys.SelectMany(
-                     priority => sortedMethods[priority].OrderBy(
-                         testCase => testCase.TestMethod.Method.Name)))
+        foreach (var testCase in sortedMethods.Keys.SelectMany(priority => sortedMethods[priority].OrderBy(testCase => testCase.TestMethod.Method.Name)))
         {
             yield return testCase;
         }
@@ -37,12 +34,7 @@ public class PriorityOrderer : ITestCaseOrderer
 }
 
 [AttributeUsage(AttributeTargets.Method)]
-public class TestPriorityAttribute : Attribute
+public class TestPriorityAttribute(int priority) : Attribute
 {
-    public TestPriorityAttribute(int priority)
-    {
-        Priority = priority;
-    }
-
-    public int Priority { get; private set; }
+    public int Priority { get; private set; } = priority;
 }

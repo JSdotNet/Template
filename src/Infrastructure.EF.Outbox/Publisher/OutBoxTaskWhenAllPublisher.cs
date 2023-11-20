@@ -7,17 +7,8 @@ using SolutionTemplate.Infrastructure.EF.Outbox.Entities;
 
 namespace SolutionTemplate.Infrastructure.EF.Outbox.Publisher;
 
-public sealed class OutBoxTaskWhenAllPublisher : INotificationPublisher
+public sealed class OutBoxTaskWhenAllPublisher(DbContext dbContext, ILogger<OutBoxTaskWhenAllPublisher> logger) : INotificationPublisher
 {
-    private readonly DbContext _dbContext;
-    private readonly ILogger<OutBoxTaskWhenAllPublisher> _logger;
-
-    public OutBoxTaskWhenAllPublisher(DbContext dbContext, ILogger<OutBoxTaskWhenAllPublisher> logger)
-    {
-        _dbContext = dbContext;
-        _logger = logger;
-    }
-
     public Task Publish(IEnumerable<NotificationHandlerExecutor> handlerExecutors, INotification notification, CancellationToken cancellationToken)
     {
         var tasks = handlerExecutors
@@ -37,7 +28,7 @@ public sealed class OutBoxTaskWhenAllPublisher : INotificationPublisher
 
         var consumer = handler.HandlerInstance.GetType().Name;
 
-        if (await _dbContext.Set<OutboxMessageConsumer>().AnyAsync(c =>
+        if (await dbContext.Set<OutboxMessageConsumer>().AnyAsync(c =>
                 c.OutboxMessageId == domainEvent.Id &&
                 c.Name == consumer, cancellationToken))
         {
@@ -55,19 +46,19 @@ public sealed class OutBoxTaskWhenAllPublisher : INotificationPublisher
     {
         try
         {
-            _dbContext.Set<OutboxMessageConsumer>().Add(new OutboxMessageConsumer
+            dbContext.Set<OutboxMessageConsumer>().Add(new OutboxMessageConsumer
             {
                 OutboxMessageId = notification.Id,
                 Name = consumer
             });
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
         }
         catch (Exception e)
         {
             // Because the outbox implementation is critical to the system, we want to it works correctly.
             // If registering the consumer fails, we log is with a critical log level.
-            _logger.FailedToRegisterConsumer(e, notification.Id, consumer);
+            logger.FailedToRegisterConsumer(e, notification.Id, consumer);
 
             // We do not throw the exception. This would trigger a retry on a already correctly processed message.
             // That would be exactly what we try to prevent with this IdempotentDomainEventNotificationHandler

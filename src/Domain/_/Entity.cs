@@ -1,8 +1,6 @@
 ﻿namespace SolutionTemplate.Domain._;
 
-public abstract class Entity : IHasId
+public abstract class Entity(Guid id) : IHasId
 {
-    public Guid Id { get; }
-
-    protected Entity(Guid id) => Id = id;
+    public Guid Id { get; } = id;
 }

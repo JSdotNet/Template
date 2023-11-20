@@ -2,23 +2,8 @@
 
 namespace SolutionTemplate.Application._;
 
-public class PagedList<TResponse>
+public sealed record PagedList<TResponse>(int Page, int PageSize, int TotalCount, int TotalPages, IReadOnlyList<TResponse> Items)
 {
-    public int Page { get; }
-    public int PageSize { get; }
-    public int TotalCount { get; }
-    public int TotalPages { get; }
-    public IReadOnlyList<TResponse> Items { get; }
-
-    public PagedList(int page, int pageSize, int totalCount, int totalPages, IReadOnlyList<TResponse> items)
-    {
-        Page = page;
-        PageSize = pageSize;
-        TotalCount = totalCount;
-        TotalPages = totalPages;
-        Items = items;
-    }
-
     public bool HasNextPage => Page < TotalPages;
     public bool HasPreviousPage => Page > 1;
 

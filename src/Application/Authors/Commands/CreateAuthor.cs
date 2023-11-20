@@ -21,17 +21,11 @@ public static class CreateAuthor
         }
     }
 
-    internal sealed class Handler : ICommandHandler<Command, Guid>
+    internal sealed class Handler(IAuthorRepository authorRepository) : ICommandHandler<Command, Guid>
     {
-        private readonly IAuthorRepository _authorRepository;
-
-        public Handler(IAuthorRepository authorRepository)
-        {
-            _authorRepository = authorRepository;
-        }
         public async Task<Result<Guid>> Handle(Command request, CancellationToken cancellationToken)
         {
-            var author = await _authorRepository.FindByEmail(request.Email);
+            var author = await authorRepository.FindByEmail(request.Email);
             if (author is not null)
                 return Result.Failure<Guid>(ApplicationErrors.AlreadyExists<Author>(request.Email));
 
@@ -39,7 +33,7 @@ public static class CreateAuthor
             if (result.IsFailure)
                 return Result.Failure<Guid>(result.Error!.Value); // TODO I do not like the .Value here...
 
-            _authorRepository.Add(result);
+            authorRepository.Add(result);
 
             return result.Value.Id; // TODO I do not like the .Value.Id here...
         }

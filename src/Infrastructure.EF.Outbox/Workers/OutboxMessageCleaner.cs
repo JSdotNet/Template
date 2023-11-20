@@ -8,20 +8,13 @@ using SolutionTemplate.Infrastructure.EF.Outbox.Options;
 
 namespace SolutionTemplate.Infrastructure.EF.Outbox.Workers;
 
-internal sealed class OutboxMessageCleaner : BackgroundService
+internal sealed class OutboxMessageCleaner(IServiceProvider serviceProvider, IOptions<OutboxOptions> options, ILogger<OutboxMessageCleaner> logger)
+    : BackgroundService
 {
-    private readonly ILogger _logger;
-    private readonly IServiceProvider _serviceProvider;
-    private int _intervalInSeconds;
+    private readonly ILogger _logger = logger;
+    private int _intervalInSeconds = options.Value.MessageProcessorIntervalInSeconds;
 
-    public OutboxMessageCleaner(IServiceProvider serviceProvider, IOptions<OutboxOptions> options, ILogger<OutboxMessageCleaner> logger)
-    {
-        _serviceProvider = serviceProvider;
-        _logger = logger;
-
-        // We will reevaluate the options each run, but we need the interval te start with.
-        _intervalInSeconds = options.Value.MessageProcessorIntervalInSeconds;
-    }
+    // We will reevaluate the options each run, but we need the interval te start with.
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -61,7 +54,7 @@ internal sealed class OutboxMessageCleaner : BackgroundService
 
     private async Task<int> ProcessScopedRun(CancellationToken stoppingToken)
     {
-        using var scope = _serviceProvider.CreateScope();
+        using var scope = serviceProvider.CreateScope();
 
         var optionsSnapshot = scope.ServiceProvider.GetRequiredService<IOptionsSnapshot<OutboxOptions>>();
         var options = optionsSnapshot.Value;

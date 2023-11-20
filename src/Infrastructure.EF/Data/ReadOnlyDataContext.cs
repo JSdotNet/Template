@@ -4,24 +4,18 @@ using SolutionTemplate.Domain;
 
 namespace SolutionTemplate.Infrastructure.EF.Data;
 
-internal sealed class ReadOnlyDataContext : IReadOnlyDataContext
+internal sealed class ReadOnlyDataContext(DataContext dbContext) : IReadOnlyDataContext
 {
-    private readonly DataContext _dbContext;
-
-    public ReadOnlyDataContext(DataContext dbContext)
-    {
-        // TODO Use readonly connectionString?
-        _dbContext = dbContext;
-    }
+    // TODO Use readonly connectionString?
 
     public IQueryable<TEntity> Query<TEntity>() where TEntity : class
     {
-        return _dbContext.Set<TEntity>().AsNoTracking();
+        return dbContext.Set<TEntity>().AsNoTracking();
     }
 
 
     public IAsyncEnumerable<TEntity> GetAsyncEnumerable<TEntity>() where TEntity : class
     {
-        return _dbContext.Set<TEntity>().AsNoTracking().AsAsyncEnumerable();
+        return dbContext.Set<TEntity>().AsNoTracking().AsAsyncEnumerable();
     }
 }

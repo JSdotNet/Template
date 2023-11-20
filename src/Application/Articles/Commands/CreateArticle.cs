@@ -26,19 +26,11 @@ public static class CreateArticle
         }
     }
 
-    internal sealed class Handler : ICommandHandler<Command, Response>
+    internal sealed class Handler(IArticleRepository articleRepository, IAuthorRepository authorRepository) : ICommandHandler<Command, Response>
     {
-        private readonly IArticleRepository _articleRepository;
-        private readonly IAuthorRepository _authorRepository;
-
-        public Handler(IArticleRepository articleRepository, IAuthorRepository authorRepository)
-        {
-            _articleRepository = articleRepository;
-            _authorRepository = authorRepository;
-        }
         public async Task<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
         {
-            var author = await _authorRepository.FindByEmail(request.Email);
+            var author = await authorRepository.FindByEmail(request.Email);
             if (author is null)
             {
                 var result = CreateArticleService.CreateArticleForAuthor(request.Title, request.Content, request.Email, request.Firstname, request.Lastname, request.Tags);
@@ -47,8 +39,8 @@ public static class CreateArticle
                     return Result.Failure<Response>(result.Error!.Value); // TODO I do not like the .Value here...
                 }
 
-                _articleRepository.Add(result.Value.Article);
-                _authorRepository.Add(result.Value.Author);
+                articleRepository.Add(result.Value.Article);
+                authorRepository.Add(result.Value.Author);
 
                 return new Response(result.Value.Article.Id, result.Value.Article.Title, result.Value.Article.Content);
             }
@@ -61,7 +53,7 @@ public static class CreateArticle
                      return Result.Failure<Response>(result.Error!.Value); // TODO I do not like the .Value here...
                 }
 
-                _articleRepository.Add(result);
+                articleRepository.Add(result);
 
                 return new Response(result.Value.Id, result.Value.Title, result.Value.Content);
             }

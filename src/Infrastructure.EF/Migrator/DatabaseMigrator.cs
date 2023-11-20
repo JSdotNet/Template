@@ -5,19 +5,11 @@ using SolutionTemplate.Infrastructure.EF.Data;
 
 namespace SolutionTemplate.Infrastructure.EF.Migrator;
 
-internal sealed class DatabaseMigrator : IDatabaseMigrator
+internal sealed class DatabaseMigrator(IServiceProvider serviceProvider) : IDatabaseMigrator
 {
-    private readonly IServiceProvider _serviceProvider;
-
-    public DatabaseMigrator(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-    }
-
-
     public async Task Execute(CancellationToken cancellationToken = default)
     {
-        using var scope = _serviceProvider.CreateScope();
+        using var scope = serviceProvider.CreateScope();
 
 
         var context = scope.ServiceProvider.GetRequiredService<DataContext>();

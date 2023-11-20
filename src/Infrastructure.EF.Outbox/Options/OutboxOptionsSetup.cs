@@ -3,17 +3,10 @@ using Microsoft.Extensions.Options;
 
 namespace SolutionTemplate.Infrastructure.EF.Outbox.Options;
 
-public class OutboxOptionsSetup : IConfigureOptions<OutboxOptions>
+public class OutboxOptionsSetup(IConfiguration configuration) : IConfigureOptions<OutboxOptions>
 {
-    private readonly IConfiguration _configuration;
-
-    public OutboxOptionsSetup(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
-
     public void Configure(OutboxOptions options)
     {
-        _configuration.GetSection(nameof(OutboxOptions)).Bind(options);
+        configuration.GetSection(nameof(OutboxOptions)).Bind(options);
     }
 }

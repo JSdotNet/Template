@@ -15,15 +15,8 @@ using ApplicationException = SolutionTemplate.Application._.Behaviors.Applicatio
 
 namespace SolutionTemplate.Presentation.Api.Middleware;
 
-internal sealed class ExceptionHandlerMiddleware : IMiddleware
+internal sealed class ExceptionHandlerMiddleware(ILogger<ExceptionHandlerMiddleware> logger) : IMiddleware
 {
-    private readonly ILogger<ExceptionHandlerMiddleware> _logger;
-
-    public ExceptionHandlerMiddleware(ILogger<ExceptionHandlerMiddleware> logger)
-    {
-        _logger = logger;
-    }
-
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         try
@@ -46,21 +39,21 @@ internal sealed class ExceptionHandlerMiddleware : IMiddleware
         switch (exception)
         {
             case ValidationException validationException:
-                _logger.ValidationError(validationException.Errors, exception);
+                logger.ValidationError(validationException.Errors, exception);
 
                 httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 problem.Title = "One or more validation errors occurred.";
                 problem.Detail = exception.Message;
                 break;
             case ApplicationException applicationException:
-                _logger.ApplicationError(applicationException.Code.ToString(), exception);
+                logger.ApplicationError(applicationException.Code.ToString(), exception);
 
                 httpContext.Response.StatusCode = MapErrorToStatusCode(applicationException.Code);
                 problem.Type = nameof(ApplicationException);
                 problem.Title = exception.Message;
                 break;
             case DomainException domainException:
-                _logger.DomainError(domainException.Code, exception);
+                logger.DomainError(domainException.Code, exception);
 
                 httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 problem.Type = nameof(DomainException);
@@ -68,7 +61,7 @@ internal sealed class ExceptionHandlerMiddleware : IMiddleware
                 break;
 
             default:
-                _logger.UnExpectedError(exception);
+                logger.UnExpectedError(exception);
 
                 httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 problem.Title = "An unhandled error occurred.";

@@ -21,18 +21,11 @@ public static class UpdateAuthor
         }
     }
 
-    internal sealed class Handler : ICommandHandler<Command>
+    internal sealed class Handler(IAuthorRepository authorRepository) : ICommandHandler<Command>
     {
-        private readonly IAuthorRepository _authorRepository;
-
-        public Handler(IAuthorRepository authorRepository)
-        {
-            _authorRepository = authorRepository;
-        }
-
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
-            var author = await _authorRepository.GetByIdAsync(request.Id, cancellationToken);
+            var author = await authorRepository.GetByIdAsync(request.Id, cancellationToken);
             if (author is null)
                 return Result.Failure(ApplicationErrors.NotFound<Author>(request.Id));
 
