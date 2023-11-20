@@ -3,7 +3,7 @@
 using SolutionTemplate.Domain._;
 
 namespace SolutionTemplate.Application._.Behaviors;
-
+ 
 internal sealed class LoggingPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
     where TResponse : Result
@@ -22,19 +22,6 @@ internal sealed class LoggingPipelineBehavior<TRequest, TResponse> : IPipelineBe
         using (_logger.BeginScope("{Request}, {User}", request, "Job"))
 #pragma warning restore CA1848
         { 
-            _logger.SomeInformation(2);
-            _logger.SomeWarning(4);
-
-            try
-            {
-                throw new InvalidOperationException("The Exception");
-            }
-            catch (Exception exception)
-            {
-                _logger.SomeError(exception);
-                _logger.SomeCriticalError(exception);
-            }
-
             var response = await next();
 
             _logger.LogResponse(response);
