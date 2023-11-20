@@ -33,7 +33,7 @@ public record ValidationResult<TValue> : Result<TValue>, IValidationResult
     public Error[] Errors { get; }
 
 
-#pragma warning disable CA1000
+#pragma warning disable CA1000 // TODO Review coding rule
     public static ValidationResult<TValue> WithErrors(Error[] errors) => new(errors);
 #pragma warning restore CA1000
 }

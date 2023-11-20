@@ -9,10 +9,14 @@ internal sealed class AuthorCreatedDomainEventHandler(ILogger<AuthorCreatedDomai
     public Task Handle(DomainEvents.AuthorCreated notification, CancellationToken cancellationToken)
     {
         // This is only a sample. Normally you would do something useful here, like send an Email or ...
-#pragma warning disable CA1848
-        logger.LogInformation("Author Created: {AuthorId}", notification.AuthorId);
-#pragma warning restore CA1848
+        logger.AuthorCreated(notification.AuthorId);
 
         return Task.CompletedTask;
     }
+}
+
+public static partial class Log
+{
+    [LoggerMessage(1, LogLevel.Information, "Author Created: {AuthorId}")]
+    public static partial void AuthorCreated(this ILogger logger, Guid authorId);
 }
