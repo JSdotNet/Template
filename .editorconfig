@@ -344,6 +344,7 @@ dotnet_diagnostic.CA1707.severity = none
 
 
 
+
 [*.{cs,vb}]
 dotnet_style_coalesce_expression = true:suggestion
 dotnet_style_null_propagation = true:suggestion
@@ -369,6 +370,11 @@ dotnet_style_qualification_for_field = false:warning
 dotnet_style_qualification_for_property = false:warning
 dotnet_style_qualification_for_method = false:warning
 dotnet_style_qualification_for_event = false:warning
+
+
+# The following rules are ignored for generated EF migrations
+[**/Migrations/**]
+dotnet_diagnostic.CA1861.severity = none
 
 
 [/test/**]

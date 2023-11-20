@@ -90,7 +90,7 @@ internal sealed class OutboxMessageProcessor : BackgroundService
             .Take(options.MessageProcessorSimultaneousMessages)
             .ToListAsync(stoppingToken);
 
-        if (!messages.Any())
+        if (messages.Count == 0)
         {
             return;
         }

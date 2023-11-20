@@ -205,7 +205,7 @@ public sealed class OutboxTests : IAsyncLifetime
             var errors = messages
                 .Where(outbox => outbox is { ProcessedDateUtc: not null, Error: not null })
                 .Select(outbox => $"DomainEvent '{outbox.Type}': {outbox.Error}").ToArray();
-            if (errors.Any())
+            if (errors.Length != 0)
             {
                 Assert.Fail(string.Join("; ", errors));
             }

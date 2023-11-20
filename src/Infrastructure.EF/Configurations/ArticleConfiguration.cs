@@ -22,7 +22,7 @@ internal sealed class ArticleConfiguration : IEntityTypeConfiguration<Article>
             .HasConversion(new ValueConverter<IReadOnlyList<string>, string>
             (
                 v => string.Join(";", v), 
-                v => v.Split(new[] { ';' }).ToList()
+                v => v.Split(';', StringSplitOptions.None).ToList()
             ));
     }
 }

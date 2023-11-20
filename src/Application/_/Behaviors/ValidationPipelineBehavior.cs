@@ -34,7 +34,7 @@ internal sealed class ValidationPipelineBehavior<TRequest, TResponse> : IPipelin
             .ToArray();
 
 
-        return errors.Any()
+        return errors.Length != 0
             ? CreateValidationResult<TResponse>(errors)
             : await next();
     }
