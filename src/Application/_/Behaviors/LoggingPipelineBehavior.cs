@@ -24,7 +24,11 @@ internal sealed class LoggingPipelineBehavior<TRequest, TResponse> : IPipelineBe
         { 
             var response = await next();
 
-            _logger.LogResponse(response);
+            if (response.IsFailure)
+                _logger.Error(response.Error!);
+            else
+                _logger.LogResponse(response);
+
             return response;
         }
     }
@@ -35,17 +39,9 @@ internal sealed class LoggingPipelineBehavior<TRequest, TResponse> : IPipelineBe
 
 public static partial class Log
 {
-    [LoggerMessage(0, LogLevel.Information, "This is some Information with value {Test}")]
-    public static partial void SomeInformation(this ILogger logger, int test);
+    [LoggerMessage(2, LogLevel.Warning, "Error response {code}.")]
+    public static partial void Error(this ILogger logger, string code);
 
-    [LoggerMessage(1, LogLevel.Warning, "This is a Warning with value {Test}")]
-    public static partial void SomeWarning(this ILogger logger, int test);
-
-    [LoggerMessage(2, LogLevel.Error, "This is an Error")]
-    public static partial void SomeError(this ILogger logger, Exception exception);
-
-    [LoggerMessage(3, LogLevel.Error, "This Error is Critical")]
-    public static partial void SomeCriticalError(this ILogger logger, Exception exception);
 
     [LoggerMessage(4, LogLevel.Information, "Response: {Response}")]
     public static partial void LogResponse(this ILogger logger, object response);
