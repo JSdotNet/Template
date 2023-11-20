@@ -51,4 +51,4 @@ app.Run();
 
 // This partial class is used to provide a hook for the WebApplicationFactory, so that Integration tests can be added.
 // I do not like that this is needed, but did not find a better solution.
-public partial class Program { }
+public partial class Program;

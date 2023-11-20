@@ -17,7 +17,7 @@ using SolutionTemplate.Integration.Tests.Helpers;
 namespace SolutionTemplate.Integration.Tests;
 
 [CollectionDefinition(nameof(OutboxTests), DisableParallelization = true)]
-public sealed class OutboxTestCollectionFixture : ICollectionFixture<IntegrationTestApplicationFactory> { }
+public sealed class OutboxTestCollectionFixture : ICollectionFixture<IntegrationTestApplicationFactory>;
 
 [Collection(nameof(OutboxTests))]
 public sealed class OutboxTests : IAsyncLifetime

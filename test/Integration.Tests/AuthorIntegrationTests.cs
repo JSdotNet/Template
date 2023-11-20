@@ -10,7 +10,7 @@ namespace SolutionTemplate.Integration.Tests;
 
 
 [CollectionDefinition(nameof(AuthorIntegrationTests), DisableParallelization = true)]
-public class AuthorTestCollectionFixture : ICollectionFixture<ApiTestApplicationFactory> { }
+public class AuthorTestCollectionFixture : ICollectionFixture<ApiTestApplicationFactory>;
 
 
 [Collection(nameof(AuthorIntegrationTests))]

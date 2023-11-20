@@ -12,7 +12,7 @@ namespace SolutionTemplate.Integration.Tests;
 
 
 [CollectionDefinition(nameof(ArticleIntegrationTests), DisableParallelization = true)]
-public class ArticleTestCollectionFixture : ICollectionFixture<ApiTestApplicationFactory> { }
+public class ArticleTestCollectionFixture : ICollectionFixture<ApiTestApplicationFactory>;
 
 [Collection(nameof(ArticleIntegrationTests))]
 public sealed class ArticleIntegrationTests(ApiTestApplicationFactory factory) : IAsyncLifetime

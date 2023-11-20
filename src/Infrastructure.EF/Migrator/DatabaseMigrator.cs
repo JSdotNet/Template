@@ -17,7 +17,6 @@ internal sealed class DatabaseMigrator(IServiceProvider serviceProvider) : IData
         //// turn off timeout for initial seeding
         //context.Database.SetCommandTimeout(TimeSpan.FromMinutes(30));
 
-
         await context.Database.MigrateAsync(cancellationToken);
     }
 }
