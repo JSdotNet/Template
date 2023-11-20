@@ -6,7 +6,6 @@ using SolutionTemplate.Infrastructure.EF.Outbox.Publisher;
 using SolutionTemplate.Presentation.Api;
 
 
-
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
@@ -23,6 +22,7 @@ builder.Services.AddLogging(loggingBuilder =>
     loggingBuilder.AddApplicationInsights();
 });
 builder.Services.AddApplicationInsightsTelemetry();
+builder.Services.AddSnapshotCollector();
 
 // Health
 builder.Services.AddHealthChecks()

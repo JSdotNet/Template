@@ -13,6 +13,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
 
         builder.HasKey(a => a.Id);
         builder.HasIndex(e => e.OccurredOnUtc);
+        builder.HasIndex(e => e.ProcessedDateUtc);
 
         builder.Property(e => e.Type).IsRequired().HasMaxLength(400);
         builder.Property(e => e.Content).IsRequired().HasMaxLength(2000);
