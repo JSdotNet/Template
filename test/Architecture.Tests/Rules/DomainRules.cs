@@ -61,7 +61,7 @@ public abstract class DomainRules
             .ToArray();
 
         // Assert
-        Assert.Empty(referencedAssemblies);
+        referencedAssemblies.Should().BeEmpty();
     }
 
 

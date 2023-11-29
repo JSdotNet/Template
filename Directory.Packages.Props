@@ -50,8 +50,10 @@
   <ItemGroup>
     <!-- System.Net.Http > 4.3.0 -->
     <PackageVersion Include="System.Net.Http" Version="4.3.4" />
+    
     <!-- System.Text.RegularExpressions > 4.3.0 -->
     <PackageVersion Include="System.Text.RegularExpressions" Version="4.3.1" />
+    
     <!-- System.Drawing.Common > 5.0.0 -->
     <!--<PackageVersion Include="System.Drawing.Common" Version="7.0.0" />-->
   </ItemGroup>

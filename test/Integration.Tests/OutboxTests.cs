@@ -205,11 +205,9 @@ public sealed class OutboxTests : IAsyncLifetime
             var errors = messages
                 .Where(outbox => outbox is { ProcessedDateUtc: not null, Error: not null })
                 .Select(outbox => $"DomainEvent '{outbox.Type}': {outbox.Error}").ToArray();
-            if (errors.Length != 0)
-            {
-                Assert.Fail(string.Join("; ", errors));
-            }
-
+            
+            errors.Should().BeEmpty(string.Join("; ", errors));
+           
             var consumers = await dataContext.Set<OutboxMessageConsumer>().AsNoTracking().ToArrayAsync();
 
             if (messages.All(outbox => outbox.ProcessedDateUtc != null && 

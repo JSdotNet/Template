@@ -10,6 +10,7 @@ internal static class TestResultExtensions
             ? string.Join(Environment.NewLine, testResult.FailingTypeNames)
             : null;
 
+
         Assert.True(testResult.IsSuccessful, print);
     }
 }

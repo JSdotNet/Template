@@ -18,19 +18,19 @@ public class ArticleTests
         var result = Article.Create(title, content, authorId, tags);
 
         // Assert
-        Assert.IsType<Result<Article>>(result);
-        Assert.True(result.IsSuccess);
-
+        result.Should().BeOfType<Result<Article>>()
+              .Which.IsSuccess.Should().BeTrue();
+     
         var article = result.Value;
 
-        Assert.NotNull(article);
-        Assert.NotNull(article.Id);
+        article.Should().NotBeNull();
+        article.Id.Should().NotBeEmpty();
 
-        Assert.Equal(title, article.Title);
-        Assert.Equal(content, article.Content);
-        Assert.Equal(authorId, article.AuthorId);
+        article.Title.Should().Be(title);
+        article.Content.Should().Be(content);
+        article.AuthorId.Should().Be(authorId);
 
-        Assert.Equal(tags.Length, article.Tags.Count);
+        article.Tags.Should().HaveCount(tags.Length);
     }
 
 
@@ -46,9 +46,10 @@ public class ArticleTests
         var result = Article.Create(title, content, Guid.NewGuid(), tags);
 
         // Assert
-        Assert.IsType<Result<Article>>(result);
-        Assert.True(result.IsFailure);
-        Assert.Equal(DomainErrors.Article.AtLeast3Tags.Code, result.Error!);
+        result.Should().BeOfType<Result<Article>>()
+              .Which.IsFailure.Should().BeTrue();
+
+        result.Error.Should().Be(DomainErrors.Article.AtLeast3Tags.Code);
     }
 
     [Fact]
@@ -63,9 +64,10 @@ public class ArticleTests
         var result = Article.Create(title, content, Guid.NewGuid(), tags);
 
         // Assert
-        Assert.IsType<Result<Article>>(result);
-        Assert.True(result.IsFailure);
-        Assert.Equal(DomainErrors.Article.NoMoreThen10Tags.Code, result.Error!);
+        result.Should().BeOfType<Result<Article>>()
+              .Which.IsFailure.Should().BeTrue();
+
+        result.Error.Should().Be(DomainErrors.Article.NoMoreThen10Tags.Code);
     }
 
     [Fact]
@@ -79,9 +81,10 @@ public class ArticleTests
         var result = article.AddTag(tagName);
 
         // Assert
-        Assert.IsType<Result>(result);
-        Assert.True(result.IsSuccess);
-        Assert.Equal(4, article.Tags.Count);
-        Assert.Equal(tagName, article.Tags[3]);
+        result.Should().BeOfType<Result>()
+              .Which.IsSuccess.Should().BeTrue();
+
+        article.Tags.Should().HaveCount(4);
+        article.Tags.Should().Contain(tagName);
     }
 }
