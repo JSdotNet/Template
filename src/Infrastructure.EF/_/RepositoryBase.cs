@@ -18,7 +18,6 @@ internal abstract class RepositoryBase<TAggregate>
         _dbSet = DataContext.Set<TAggregate>();
     }
 
-
     public async ValueTask<TAggregate?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var result = await _dbSet.SingleOrDefaultAsync(i => i.Id == id, cancellationToken);

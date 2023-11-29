@@ -11,7 +11,7 @@ public class ArticleTests
         // Arrange
         var title = "Test Title";
         var content = "Test Content";
-        var tags = new [] { "test", "tags", "example" };
+        var tags = new[] { "test", "tags", "example" };
         var authorId = Guid.NewGuid();
 
         // Act
@@ -40,7 +40,7 @@ public class ArticleTests
         // Arrange
         var title = "Test Title";
         var content = "Test Content";
-        var tags = new [] { "test", "tags" };
+        var tags = new[] { "test", "tags" };
 
         // Act
         var result = Article.Create(title, content, Guid.NewGuid(), tags);
@@ -57,7 +57,7 @@ public class ArticleTests
         // Arrange
         var title = "Test Title";
         var content = "Test Content";
-        var tags = new [] { "test", "tags", "example", "sample", "unit", "mock", "research", "data", "analysis", "statistics", "extra" };
+        var tags = new[] { "test", "tags", "example", "sample", "unit", "mock", "research", "data", "analysis", "statistics", "extra" };
 
         // Act
         var result = Article.Create(title, content, Guid.NewGuid(), tags);
