@@ -18,12 +18,10 @@ public class UpdateAuthorCommandHandlerTests
         var author = Author.Create("email", "firstName", "lastName").Value;
 
         var command = new UpdateAuthor.Command(authorId, firstName, lastName);
-        var authorRepositoryMock = new Mock<IAuthorRepository>();
-        authorRepositoryMock
-            .Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), default))
-            .ReturnsAsync(author);
+        var authorRepositoryMock = Substitute.For<IAuthorRepository>();
+        authorRepositoryMock.GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(author);
 
-        var handler = new UpdateAuthor.Handler(authorRepositoryMock.Object);
+        var handler = new UpdateAuthor.Handler(authorRepositoryMock);
 
         // Act
         var result = await handler.Handle(command, default);
@@ -44,12 +42,10 @@ public class UpdateAuthorCommandHandlerTests
         var lastName = _fixture.Create<string>();
 
         var command = new UpdateAuthor.Command(authorId, firstName, lastName);
-        var authorRepositoryMock = new Mock<IAuthorRepository>();
-        authorRepositoryMock
-            .Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), default))
-            .ReturnsAsync((Author?)null);
+        var authorRepositoryMock = Substitute.For<IAuthorRepository>();
+        authorRepositoryMock.GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns((Author?)null);
 
-        var handler = new UpdateAuthor.Handler(authorRepositoryMock.Object);
+        var handler = new UpdateAuthor.Handler(authorRepositoryMock);
 
         // Act
         var result = await handler.Handle(command, default);

@@ -10,18 +10,18 @@ public class DeleteArticleCommandHandlerTests
     public async Task Handle_Existing_Should_DeleteArticle()
     {
         // Arrange
-        var articleRepositoryMock = new Mock<IArticleRepository>();
+        var articleRepositoryMock = Substitute.For<IArticleRepository>();
         var command = new DeleteArticle.Command(Guid.NewGuid());
-        var handler = new DeleteArticle.Handler(articleRepositoryMock.Object);
+        var handler = new DeleteArticle.Handler(articleRepositoryMock);
 
-        articleRepositoryMock.Setup(r => r.GetByIdAsync(command.Id, default))
-            .ReturnsAsync(Article.Create("Test", "Test Content", Guid.NewGuid(), "1", "2", "3").Value);
+        articleRepositoryMock.GetByIdAsync(command.Id, Arg.Any<CancellationToken>())
+            .Returns(Article.Create("Test", "Test Content", Guid.NewGuid(), "1", "2", "3").Value);
 
         // Act
         var result = await handler.Handle(command, default);
 
         // Assert
-        articleRepositoryMock.Verify(r => r.Remove(It.IsAny<Article>()), Times.Once());
+        articleRepositoryMock.Received(1).Remove(Arg.Any<Article>());
         result.IsSuccess.Should().BeTrue();
         result.Error.Should().BeNull();
     }
@@ -30,18 +30,17 @@ public class DeleteArticleCommandHandlerTests
     public async Task Handle_NotExisting_Should_ReturnError()
     {
         // Arrange
-        var articleRepositoryMock = new Mock<IArticleRepository>();
+        var articleRepositoryMock = Substitute.For<IArticleRepository>();
         var command = new DeleteArticle.Command(Guid.NewGuid());
-        var handler = new DeleteArticle.Handler(articleRepositoryMock.Object);
+        var handler = new DeleteArticle.Handler(articleRepositoryMock);
 
-        articleRepositoryMock.Setup(r => r.GetByIdAsync(command.Id, default))
-            .ReturnsAsync((Article?)null);
+        articleRepositoryMock.GetByIdAsync(command.Id, Arg.Any<CancellationToken>()).Returns((Article?)null);
 
         // Act
         var result = await handler.Handle(command, default);
 
         // Assert
-        articleRepositoryMock.Verify(r => r.Remove(It.IsAny<Article>()), Times.Never());
+        articleRepositoryMock.DidNotReceive().Remove(Arg.Any<Article>());
         result.IsSuccess.Should().BeFalse();
         result.Error.Should().NotBeNull();
     }

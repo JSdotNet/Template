@@ -19,12 +19,10 @@ public class UpdateArticleCommandHandlerTests
         var article = Article.Create("title", "contact", authorId, "1", "2", "3").Value;
 
         var command = new UpdateArticle.Command(articleId, title, content);
-        var articleRepositoryMock = new Mock<IArticleRepository>();
-        articleRepositoryMock
-            .Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), default))
-            .ReturnsAsync(article);
+        var articleRepositoryMock = Substitute.For<IArticleRepository>();
+        articleRepositoryMock.GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(article);
 
-        var handler = new UpdateArticle.Handler(articleRepositoryMock.Object);
+        var handler = new UpdateArticle.Handler(articleRepositoryMock);
 
         // Act
         var result = await handler.Handle(command, default);
@@ -45,12 +43,10 @@ public class UpdateArticleCommandHandlerTests
         var lastName = _fixture.Create<string>();
 
         var command = new UpdateArticle.Command(authorId, firstName, lastName);
-        var articleRepositoryMock = new Mock<IArticleRepository>();
-        articleRepositoryMock
-            .Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), default))
-            .ReturnsAsync((Article?)null);
+        var articleRepositoryMock = Substitute.For<IArticleRepository>();
+        articleRepositoryMock.GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns((Article?)null);
 
-        var handler = new UpdateArticle.Handler(articleRepositoryMock.Object);
+        var handler = new UpdateArticle.Handler(articleRepositoryMock);
 
         // Act
         var result = await handler.Handle(command, default);

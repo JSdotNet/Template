@@ -20,11 +20,11 @@ public class CreateArticleCommandHandlerTests
         var lastname = _fixture.Create<string>();
         var command = new CreateArticle.Command(title, content, email, firstname, lastname, "1", "2", "3");
 
-        var articleRepositoryMock = new Mock<IArticleRepository>();
-        var authorRepositoryMock = new Mock<IAuthorRepository>();
-        authorRepositoryMock.Setup(m => m.FindByEmail(email)).ReturnsAsync(default(Author));
+        var articleRepositoryMock = Substitute.For<IArticleRepository>();
+        var authorRepositoryMock = Substitute.For<IAuthorRepository>();
+        authorRepositoryMock.FindByEmail(email).Returns(default(Author));
 
-        var handler = new CreateArticle.Handler(articleRepositoryMock.Object, authorRepositoryMock.Object);
+        var handler = new CreateArticle.Handler(articleRepositoryMock, authorRepositoryMock);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
@@ -37,17 +37,15 @@ public class CreateArticleCommandHandlerTests
         result.Value.Content.Should().Be(content);
 
 
-        articleRepositoryMock.Verify(m =>
-            m.Add(It.Is<Article>(a => a.Id == result.Value.Id &&
-                                                         a.Title == title &&
-                                                         a.Content == content)), Times.Once);
+        articleRepositoryMock.Received(1).Add(Arg.Is<Article>(a =>
+            a.Id == result.Value.Id &&
+            a.Title == title &&
+            a.Content == content));
 
-        authorRepositoryMock.Verify(m =>
-            m.Add(It.Is<Author>(a => a.Email == email &&
-                                                       a.Firstname == firstname &&
-                                                       a.Lastname == lastname)), Times.Once);
-
-        articleRepositoryMock.VerifyAll();
+        authorRepositoryMock.Received(1).Add(Arg.Is<Author>(a =>
+            a.Email == email &&
+            a.Firstname == firstname &&
+            a.Lastname == lastname));
     }
 
     [Fact]
@@ -62,11 +60,11 @@ public class CreateArticleCommandHandlerTests
         var command = new CreateArticle.Command(title, content, email, "n/a", "n/a", "1", "2", "3");
         var author = Author.Create(email, firstname, lastname).Value;
 
-        var articleRepositoryMock = new Mock<IArticleRepository>();
-        var authorRepositoryMock = new Mock<IAuthorRepository>();
-        authorRepositoryMock.Setup(m => m.FindByEmail(email)).ReturnsAsync(author);
+        var articleRepositoryMock = Substitute.For<IArticleRepository>();
+        var authorRepositoryMock = Substitute.For<IAuthorRepository>();
+        authorRepositoryMock.FindByEmail(email).Returns(author);
 
-        var handler = new CreateArticle.Handler(articleRepositoryMock.Object, authorRepositoryMock.Object);
+        var handler = new CreateArticle.Handler(articleRepositoryMock, authorRepositoryMock);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
@@ -79,12 +77,11 @@ public class CreateArticleCommandHandlerTests
         result.Value.Content.Should().Be(content);
 
 
-        articleRepositoryMock.Verify(m =>
-            m.Add(It.Is<Article>(a => a.Id == result.Value.Id &&
-                                      a.Title == title &&
-                                      a.Content == content)), Times.Once);
+        articleRepositoryMock.Received(1).Add(Arg.Is<Article>(a => 
+            a.Id == result.Value.Id &&
+            a.Title == title &&
+            a.Content == content));
 
-        authorRepositoryMock.Verify(m => m.Add(It.IsAny<Author>()), Times.Never);
-        articleRepositoryMock.VerifyAll();
+        authorRepositoryMock.DidNotReceive().Add(Arg.Any<Author>());
     }
 }

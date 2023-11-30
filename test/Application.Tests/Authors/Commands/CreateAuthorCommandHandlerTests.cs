@@ -18,10 +18,10 @@ public class CreateAuthorCommandHandlerTests
         var lastname = _fixture.Create<string>();
         var command = new CreateAuthor.Command(email, firstname, lastname);
 
-        var authorRepositoryMock = new Mock<IAuthorRepository>();
-        authorRepositoryMock.Setup(m => m.FindByEmail(email)).ReturnsAsync(default(Author));
+        var authorRepositoryMock = Substitute.For<IAuthorRepository>();
+        authorRepositoryMock.FindByEmail(email).Returns(default(Author));
 
-        var handler = new CreateAuthor.Handler(authorRepositoryMock.Object);
+        var handler = new CreateAuthor.Handler(authorRepositoryMock);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
@@ -29,12 +29,10 @@ public class CreateAuthorCommandHandlerTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeEmpty();
-        authorRepositoryMock.Verify(m =>
-            m.Add(It.Is<Author>(a => a.Id == result.Value &&
+        authorRepositoryMock.Received(1).Add(Arg.Is<Author>(a => a.Id == result.Value &&
                                                        a.Email == email &&
                                                        a.Firstname == firstname &&
-                                                       a.Lastname == lastname)), Times.Once);
-        authorRepositoryMock.VerifyAll();
+                                                       a.Lastname == lastname));
     }
 
     [Fact]
@@ -46,10 +44,10 @@ public class CreateAuthorCommandHandlerTests
         var lastname = _fixture.Create<string>();
         var command = new CreateAuthor.Command(email, firstname, lastname);
 
-        var authorRepositoryMock = new Mock<IAuthorRepository>();
-        authorRepositoryMock.Setup(x => x.FindByEmail(email)).ReturnsAsync(Author.Create(email, firstname, lastname));
+        var authorRepositoryMock = Substitute.For<IAuthorRepository>();
+        authorRepositoryMock.FindByEmail(email).Returns(Author.Create(email, firstname, lastname));
 
-        var handler = new CreateAuthor.Handler(authorRepositoryMock.Object);
+        var handler = new CreateAuthor.Handler(authorRepositoryMock);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
@@ -58,6 +56,5 @@ public class CreateAuthorCommandHandlerTests
         result.IsSuccess.Should().BeFalse();
         result.Error?.Code.Should().Be(ApplicationErrors.AlreadyExists<Author>(email).Code);
         result.Error?.Message.Should().Be(ApplicationErrors.AlreadyExists<Author>(email).Message);
-        authorRepositoryMock.VerifyAll();
     }
 }

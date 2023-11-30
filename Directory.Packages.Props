@@ -68,7 +68,7 @@
   <!-- Test packages-->
   <ItemGroup>
     <PackageVersion Include="xunit" Version="2.6.2" />
-    <PackageVersion Include="Moq" Version="4.20.70" />
+    <PackageVersion Include="NSubstitute" Version="5.1.0" />
     <PackageVersion Include="FluentAssertions" Version="6.12.0" />
     <PackageVersion Include="AutoFixture" Version="4.18.1" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
@@ -86,7 +86,7 @@
   <!-- Test analyzers-->
   <ItemGroup>
     <PackageVersion Include="xunit.analyzers" Version="1.6.0" />
-    <PackageVersion Include="Moq.Analyzers" Version="0.0.9" />
     <PackageVersion Include="FluentAssertions.Analyzers" Version="0.26.0" />
+    <PackageVersion Include="NSubstitute.Analyzers.CSharp" Version="1.0.16" />
   </ItemGroup>
 </Project>
