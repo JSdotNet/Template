@@ -1,6 +1,6 @@
 ﻿using SolutionTemplate.Domain._;
 
-namespace SolutionTemplate.Domain;
+namespace SolutionTemplate.Domain.Articles;
 
 public static class DomainErrors
 {
@@ -11,7 +11,5 @@ public static class DomainErrors
     }
 
 
-
     private static Error Create(string code, string message) => new(code, message);
 }
-

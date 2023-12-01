@@ -2,7 +2,7 @@
 
 using SolutionTemplate.Domain._;
 
-namespace SolutionTemplate.Domain.Models;
+namespace SolutionTemplate.Domain.Authors;
 
 [DebuggerDisplay("{Id}: {Firstname} {Lastname}")]
 public sealed class Author : AggregateRoot

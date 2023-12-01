@@ -1,7 +1,7 @@
 ﻿using SolutionTemplate.Domain._;
-using SolutionTemplate.Domain.Models;
+using SolutionTemplate.Domain.Authors;
 
-namespace SolutionTemplate.Domain.Repository;
+namespace SolutionTemplate.Domain.Authors.Repository;
 
 public interface IAuthorRepository : IRepository<Author>
 {

@@ -1,4 +1,5 @@
-﻿using SolutionTemplate.Domain.Models;
+﻿using SolutionTemplate.Domain.Articles;
+using SolutionTemplate.Domain.Authors;
 using SolutionTemplate.Infrastructure.EF.Data;
 
 namespace SolutionTemplate.Integration.Tests.Helpers;

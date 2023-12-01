@@ -2,7 +2,8 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-using SolutionTemplate.Domain.Models;
+using SolutionTemplate.Domain.Articles;
+using SolutionTemplate.Domain.Authors;
 
 namespace SolutionTemplate.Infrastructure.EF.Configurations;
 

@@ -2,8 +2,8 @@
 
 using SolutionTemplate.Application._.Messaging;
 using SolutionTemplate.Domain._;
-using SolutionTemplate.Domain.Models;
-using SolutionTemplate.Domain.Repository;
+using SolutionTemplate.Domain.Authors;
+using SolutionTemplate.Domain.Authors.Repository;
 
 namespace SolutionTemplate.Application.Authors.Commands;
 

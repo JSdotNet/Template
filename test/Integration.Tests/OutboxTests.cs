@@ -4,8 +4,6 @@ using SolutionTemplate.Application.Authors.Commands;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-
-using SolutionTemplate.Domain;
 using SolutionTemplate.Infrastructure.EF.Data;
 using SolutionTemplate.Infrastructure.EF.Outbox.Entities;
 
@@ -85,7 +83,7 @@ public sealed class OutboxTests : IAsyncLifetime
 
         var fixture = new Fixture();
 
-        var domainEvent = new DomainEvents.AuthorCreated(fixture.Create<Guid>());
+        var domainEvent = new Domain.Authors.DomainEvents.AuthorCreated(fixture.Create<Guid>());
 
         _output.WriteLine($"Preparing event took {stopWatch.ElapsedMilliseconds} ms");
         stopWatch.Restart();
@@ -169,7 +167,7 @@ public sealed class OutboxTests : IAsyncLifetime
 
         while (DateTime.UtcNow.Subtract(start).TotalSeconds < timeoutInSeconds)
         {
-            if(results.All(r => logger.Get<DomainEvents.AuthorCreated>().Any(de => de.AuthorId == r)))
+            if(results.All(r => logger.Get<Domain.Authors.DomainEvents.AuthorCreated>().Any(de => de.AuthorId == r)))
                return;
 
             await Task.Delay(delayBetweenAttemptsInMilliseconds);
@@ -184,7 +182,7 @@ public sealed class OutboxTests : IAsyncLifetime
         {
             var logger = _factory.Services.GetRequiredService<IDomainEventLogger>();
 
-            if (logger.Get<DomainEvents.AuthorCreated>().Any(de => de.AuthorId == authorId))
+            if (logger.Get<Domain.Authors.DomainEvents.AuthorCreated>().Any(de => de.AuthorId == authorId))
                 return;
 
             await Task.Delay(delayBetweenAttemptsInMilliseconds);

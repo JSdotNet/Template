@@ -1,5 +1,5 @@
 ﻿using SolutionTemplate.Application._.Messaging;
-using SolutionTemplate.Domain;
+using SolutionTemplate.Domain.Articles;
 
 
 namespace SolutionTemplate.Application.Articles.Events;

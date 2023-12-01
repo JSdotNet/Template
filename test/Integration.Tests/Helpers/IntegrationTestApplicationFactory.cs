@@ -14,7 +14,7 @@ using Respawn;
 using Respawn.Graph;
 
 using SolutionTemplate.Application._.Messaging;
-using SolutionTemplate.Domain;
+using SolutionTemplate.Domain.Articles;
 using SolutionTemplate.Infrastructure.EF.Data;
 using SolutionTemplate.Infrastructure.EF.Migrator;
 using SolutionTemplate.Infrastructure.EF.Outbox.Workers;
@@ -44,16 +44,16 @@ public sealed class IntegrationTestApplicationFactory : WebApplicationFactory<Pr
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll(typeof(IDomainEventNotificationHandler<>));
-            services.RemoveAll(typeof(INotificationHandler<DomainEvents.AuthorCreated>));
-            services.RemoveAll(typeof(INotificationHandler<DomainEvents.ArticleCreated>));
+            services.RemoveAll(typeof(INotificationHandler<Domain.Authors.DomainEvents.AuthorCreated>));
+            services.RemoveAll(typeof(INotificationHandler<Domain.Articles.DomainEvents.ArticleCreated>));
 
             services.RemoveAll(typeof(DbContextOptions<DbContext>));
             services.RemoveAll(typeof(IDatabaseMigrator));
 
             services.RemoveAll(typeof(OutboxMessageCleaner));
 
-            services.AddTransient<INotificationHandler<DomainEvents.AuthorCreated>, OutboxEventHandler<DomainEvents.AuthorCreated>>();
-            services.AddTransient<INotificationHandler<DomainEvents.ArticleCreated>, OutboxEventHandler<DomainEvents.ArticleCreated>>();
+            services.AddTransient<INotificationHandler<Domain.Authors.DomainEvents.AuthorCreated>, OutboxEventHandler<Domain.Authors.DomainEvents.AuthorCreated>>();
+            services.AddTransient<INotificationHandler<Domain.Articles.DomainEvents.ArticleCreated>, OutboxEventHandler<Domain.Articles.DomainEvents.ArticleCreated>>();
             services.AddSingleton<IDomainEventLogger, DomainEventLogger>();
         });
     }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using SolutionTemplate.Domain.Models;
-using SolutionTemplate.Domain.Repository;
+using SolutionTemplate.Domain.Articles;
+using SolutionTemplate.Domain.Articles.Repository;
 using SolutionTemplate.Infrastructure.EF.Data;
 
 namespace SolutionTemplate.Infrastructure.EF.Repository;

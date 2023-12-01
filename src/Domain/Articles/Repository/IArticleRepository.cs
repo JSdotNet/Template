@@ -1,7 +1,6 @@
 ﻿using SolutionTemplate.Domain._;
-using SolutionTemplate.Domain.Models;
 
-namespace SolutionTemplate.Domain.Repository;
+namespace SolutionTemplate.Domain.Articles.Repository;
 
 public interface IArticleRepository : IRepository<Article>
 {

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using SolutionTemplate.Domain.Models;
+using SolutionTemplate.Domain.Authors;
 
 namespace SolutionTemplate.Infrastructure.EF.Configurations;
 

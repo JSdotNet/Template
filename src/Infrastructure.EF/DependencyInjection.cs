@@ -4,8 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using SolutionTemplate.Domain;
-using SolutionTemplate.Domain.Repository;
-
+using SolutionTemplate.Domain.Articles.Repository;
+using SolutionTemplate.Domain.Authors.Repository;
 using SolutionTemplate.Infrastructure.EF.Data;
 using SolutionTemplate.Infrastructure.EF.Migrator;
 using SolutionTemplate.Infrastructure.EF.Repository;

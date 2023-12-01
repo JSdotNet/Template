@@ -1,5 +1,5 @@
 ﻿using SolutionTemplate.Domain._;
-using SolutionTemplate.Domain.Models;
+using SolutionTemplate.Domain.Articles;
 
 namespace SolutionTemplate.Domain.Tests;
 

@@ -1,6 +1,6 @@
 ﻿using SolutionTemplate.Application.Articles.Commands;
-using SolutionTemplate.Domain.Models;
-using SolutionTemplate.Domain.Repository;
+using SolutionTemplate.Domain.Articles;
+using SolutionTemplate.Domain.Articles.Repository;
 
 namespace SolutionTemplate.Application.Tests.Articles.Commands;
 

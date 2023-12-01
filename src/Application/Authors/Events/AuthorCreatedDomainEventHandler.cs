@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-using SolutionTemplate.Domain;
+using SolutionTemplate.Domain.Authors;
 
 namespace SolutionTemplate.Application.Authors.Events;
 

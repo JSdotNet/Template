@@ -2,7 +2,7 @@
 
 using SolutionTemplate.Domain._;
 
-namespace SolutionTemplate.Domain.Models;
+namespace SolutionTemplate.Domain.Articles;
 
 [DebuggerDisplay("{Id}: {Title}")]
 public sealed class Article : AggregateRoot
@@ -18,7 +18,7 @@ public sealed class Article : AggregateRoot
     public string Content { get; private set; } = default!;
     public DateTime LastUpdated { get; private set; } = DateTime.UtcNow;
 
-    
+
     private readonly List<string> _tags = new();
     public IReadOnlyList<string> Tags => _tags.AsReadOnly();
 
@@ -27,7 +27,7 @@ public sealed class Article : AggregateRoot
     {
         if (tags.Length < 3)
             return Result.Failure<Article>(DomainErrors.Article.AtLeast3Tags);
-        
+
         if (tags.Length > 10)
             return Result.Failure<Article>(DomainErrors.Article.NoMoreThen10Tags);
 

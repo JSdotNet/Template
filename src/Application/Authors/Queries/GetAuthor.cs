@@ -3,7 +3,7 @@
 using SolutionTemplate.Application._.Messaging;
 using SolutionTemplate.Domain;
 using SolutionTemplate.Domain._;
-using SolutionTemplate.Domain.Models;
+using SolutionTemplate.Domain.Authors;
 
 namespace SolutionTemplate.Application.Authors.Queries;
 
