@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using SolutionTemplate.Presentation.Api._;
 using SolutionTemplate.Presentation.Api.Health;
 using SolutionTemplate.Presentation.Api.Middleware;
 using SolutionTemplate.Presentation.Api.Modules;
@@ -15,7 +16,7 @@ public static class DependencyInjection
 {
     public static void AddPresentation(this IServiceCollection services, IConfiguration _)
     {
-        services.AddTransient<ExceptionHandlerMiddleware>();
+        services.AddExceptionHandler<ExceptionHandler>();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         services.AddEndpointsApiExplorer();
@@ -67,8 +68,6 @@ public static class DependencyInjection
 
     public static void UseApi(this WebApplication app, IWebHostEnvironment environment, IConfiguration configuration)
     {
-        app.UseMiddleware<ExceptionHandlerMiddleware>();
-
         // Configure the HTTP request pipeline.
         if (environment.IsDevelopment())
         {

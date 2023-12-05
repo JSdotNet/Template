@@ -3,6 +3,7 @@
 using FluentValidation;
 using FluentValidation.Results;
 
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,25 +14,11 @@ using SolutionTemplate.Application._.Behaviors;
 
 using ApplicationException = SolutionTemplate.Application._.Behaviors.ApplicationException;
 
-namespace SolutionTemplate.Presentation.Api.Middleware;
+namespace SolutionTemplate.Presentation.Api._;
 
-internal sealed class ExceptionHandlerMiddleware(ILogger<ExceptionHandlerMiddleware> logger) : IMiddleware
+internal sealed class ExceptionHandler(ILogger<ExceptionHandler> logger) : IExceptionHandler
 {
-    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
-    {
-        try
-        {
-            await next(context);
-        }
-        catch (Exception ex)
-        {
-            await HandleExceptionAsync(context, ex);
-        }
-    }
-
-
-
-    private async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
+    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
         httpContext.Response.ContentType = "application/json";
 
@@ -72,8 +59,12 @@ internal sealed class ExceptionHandlerMiddleware(ILogger<ExceptionHandlerMiddlew
 
         var json = JsonConvert.SerializeObject(problem);
 
-        await httpContext.Response.WriteAsync(json);
+        await httpContext.Response.WriteAsync(json, cancellationToken);
+
+        return true;
     }
+
+
     private static int MapErrorToStatusCode(ApplicationErrors.Code code)
     {
         return code switch

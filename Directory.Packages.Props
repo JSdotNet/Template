@@ -6,7 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- Included in all projects (except Domain) -->
-    <PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
+    <PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="8.0.0" />
@@ -61,7 +61,7 @@
   <!-- Prevent Deprecated packages -->
   <ItemGroup>
     <PackageVersion Include="Serilog" Version="3.0.1" />
-    <PackageVersion Include="Microsoft.ApplicationInsights" Version="2.21.0" />
+    <PackageVersion Include="Microsoft.ApplicationInsights" Version="2.22.0" />
     <PackageVersion Include="System.Formats.Asn1" Version="7.0.0" />
   </ItemGroup>
   
