@@ -1,5 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <None Remove="Copilot.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Copilot.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Domain\Domain.csproj" />
   </ItemGroup>
 
