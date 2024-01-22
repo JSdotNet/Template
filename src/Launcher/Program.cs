@@ -8,6 +8,8 @@ using SolutionTemplate.Presentation.Api;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
+builder.AddServiceDefaults();
+
 builder.WebHost.UseKestrelHttpsConfiguration();
 
 var config = builder.Configuration;
@@ -41,6 +43,8 @@ builder.Services.AddPresentation(config);
 
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 // Initialize the database
 await app.Services.ApplyMigrations();

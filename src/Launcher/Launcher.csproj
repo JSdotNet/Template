@@ -20,5 +20,6 @@
     <ProjectReference Include="..\Infrastructure.EF.Outbox\Infrastructure.EF.Outbox.csproj" />
     <ProjectReference Include="..\Infrastructure.EF\Infrastructure.EF.csproj" />
     <ProjectReference Include="..\Presentation\Presentation.Api.csproj" />
+    <ProjectReference Include="..\ServiceDefaults\SolutionTemplate.ServiceDefaults.csproj" />
   </ItemGroup>
 </Project>
