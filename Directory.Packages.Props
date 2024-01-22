@@ -28,6 +28,7 @@
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     
     <!-- Launcher project -->
+    <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
     <PackageVersion Include="Microsoft.ApplicationInsights.SnapshotCollector" Version="1.4.4" />
     
     <!-- Infrastructure.EF project -->
@@ -41,6 +42,7 @@
     <!-- Infrastructure.EF.OutBox project -->
     <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.0" />
     <PackageVersion Include="Polly" Version="8.2.0" />
+    
     <!-- TODO Review...     
     <PackageVersion Include="Refit.HttpClientFactory" Version="7.0.0" />
     -->

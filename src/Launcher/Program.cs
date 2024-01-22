@@ -6,7 +6,10 @@ using SolutionTemplate.Infrastructure.EF.Outbox.Publisher;
 using SolutionTemplate.Presentation.Api;
 
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateSlimBuilder(args);
+
+builder.WebHost.UseKestrelHttpsConfiguration();
+
 var config = builder.Configuration;
 
 builder.Services.AddOptions();
