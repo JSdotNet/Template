@@ -44,6 +44,9 @@ public static class Extensions
             {
                 metrics.AddRuntimeInstrumentation()
                        .AddBuiltInMeters();
+
+                // Add a custom meter for the outbox
+                metrics.AddMeter("outbox");
             })
             .WithTracing(tracing =>
             {

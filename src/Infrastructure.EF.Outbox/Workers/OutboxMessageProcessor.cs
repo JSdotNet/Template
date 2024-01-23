@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using System.Diagnostics.Metrics;
+
+using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,12 +13,18 @@ using Polly;
 
 using SolutionTemplate.Domain._.Events;
 using SolutionTemplate.Infrastructure.EF.Outbox.Entities;
+using SolutionTemplate.Infrastructure.EF.Outbox.Metrics;
 using SolutionTemplate.Infrastructure.EF.Outbox.Options;
 
 namespace SolutionTemplate.Infrastructure.EF.Outbox.Workers;
 
-internal sealed class OutboxMessageProcessor(IServiceProvider serviceProvider, IOptions<OutboxOptions> options,
-        ILogger<OutboxMessageProcessor> logger)
+internal sealed class OutboxMessageProcessor
+    (
+        IServiceProvider serviceProvider,
+        IOptions<OutboxOptions> options,
+        ILogger<OutboxMessageProcessor> logger,
+        OutboxMetrics metrics
+    )
     : BackgroundService
 {
     private readonly ILogger _logger = logger;
@@ -24,6 +32,7 @@ internal sealed class OutboxMessageProcessor(IServiceProvider serviceProvider, I
 
     // We will reevaluate the options each run, but we need the interval te start with.
 
+   
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -77,6 +86,16 @@ internal sealed class OutboxMessageProcessor(IServiceProvider serviceProvider, I
     private async Task HandleMessages(IServiceScope scope, OutboxOptions options, CancellationToken stoppingToken)
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<DbContext>();
+
+        var unhandled = await dbContext.Set<OutboxMessage>()
+            .Where(m => m.ProcessedDateUtc == null)
+            .CountAsync(stoppingToken);
+
+        var quantity = await dbContext.Set<OutboxMessage>()
+            .CountAsync(stoppingToken);
+
+        metrics.Log(quantity, unhandled);
+
 
         var messages = await dbContext.Set<OutboxMessage>()
             .Where(m => m.ProcessedDateUtc == null)

@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 using SolutionTemplate.Infrastructure.EF.Outbox.Interceptors;
+using SolutionTemplate.Infrastructure.EF.Outbox.Metrics;
 using SolutionTemplate.Infrastructure.EF.Outbox.Options;
 using SolutionTemplate.Infrastructure.EF.Outbox.Workers;
 
@@ -19,5 +20,7 @@ public static class DependencyInjection
 
         services.AddHostedService<OutboxMessageProcessor>();
         services.AddHostedService<OutboxMessageCleaner>();
+
+        services.AddSingleton<OutboxMetrics>();
     }
 }
