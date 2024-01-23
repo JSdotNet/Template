@@ -19,7 +19,7 @@ public sealed class Article : AggregateRoot
     public DateTime LastUpdated { get; private set; } = DateTime.UtcNow;
 
 
-    private readonly List<string> _tags = new();
+    private readonly List<string> _tags = [];
     public IReadOnlyList<string> Tags => _tags.AsReadOnly();
 
 
