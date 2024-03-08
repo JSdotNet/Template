@@ -5,8 +5,8 @@ namespace SolutionTemplate.Infrastructure.EF.Outbox.Metrics;
 
 internal class OutboxMetrics
 {
-    private Counter<int> _unhandledCounter;
-    private Counter<int> _totalCounter;
+    private readonly Counter<int> _unhandledCounter;
+    private readonly Counter<int> _totalCounter;
 
 
     public OutboxMetrics(IMeterFactory meterFactory)

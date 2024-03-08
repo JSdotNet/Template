@@ -35,7 +35,7 @@ flowchart TD
     S --> D[Domain\Directory.Build.Props]
 ```
 
-To make sure dependency injection can be setup in the responsible project I added a [`DependencyInjection`](src/DependencyInjection.cs) file in each project (with one exception that I'll mention later).
+To make sure dependency injection can be setup in the responsible project I added a # Introduction file in each project (with one exception that I'll mention later).
 Additionally each project has a AssemblyReference class to get easy access to the Assembly of the project.
 
 ### EditorConfig
